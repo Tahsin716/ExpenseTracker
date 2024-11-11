@@ -1,2 +1,3 @@
 class Config:
     MIN_PASSWORD_LENGTH = 8
+    PASSWORD_SALT = 12

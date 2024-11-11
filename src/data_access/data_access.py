@@ -17,11 +17,11 @@ class DataAccess:
         self.session = Session()
 
     # User Management
-    def create_user(self, username, password, email):
+    def create_user(self, username, password_hash, email) -> User:
         try:
             user = User(
                 username=username,
-                password_hash=password, # TODO: Hash the password later
+                password_hash=password_hash,
                 email=email
             )
             self.session.add(user)
