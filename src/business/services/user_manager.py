@@ -1,5 +1,6 @@
 import logging
 
+from src.business.exception.security_exception import SecurityException
 from src.data_access.data_access import DataAccess
 
 
@@ -12,13 +13,13 @@ class UserManager:
                       email: str) -> bool:
         try:
             if not self.validator.validate_username(username):
-                raise SecurityError("Invalid username format")
+                raise SecurityException("Invalid username format")
 
             if not self.validator.validate_email(email):
-                raise SecurityError("Invalid email format")
+                raise SecurityException("Invalid email format")
 
             if not self.validator.validate_password(password):
-                raise SecurityError(
+                raise SecurityException(
                     "Password must be at least 8 characters long and contain "
                     "uppercase, lowercase, numbers, and special characters"
                 )
@@ -31,7 +32,7 @@ class UserManager:
 
             return True
 
-        except SecurityError as e:
+        except SecurityException as e:
             logging.error(f"Security error during registration: {str(e)}")
             return False
         except Exception as e:
