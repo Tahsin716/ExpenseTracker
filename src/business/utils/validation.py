@@ -35,18 +35,6 @@ class Validation:
 
         return all(bool(re.search(pattern, password)) for pattern in patterns)
 
-    """
-    Validate username
-    - 3-30 characters
-    - Alphanumeric and underscores only
-    - Must start with a letter
-    """
-    @staticmethod
-    def validate_username(username: str) -> bool:
-
-        username_pattern = re.compile(r'^[a-zA-Z][a-zA-Z0-9_]{2,29}$')
-        return bool(username_pattern.match(username))
-
     """Sanitize input to prevent XSS attacks"""
     @staticmethod
     def sanitize_input(input_string: str) -> str:

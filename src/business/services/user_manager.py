@@ -14,11 +14,14 @@ class UserManager:
         self.validator = Validation()
         self.current_user = None
 
-    def register(self, username: str, password: str,
+    def register(self, first_name: str, last_name: str, password: str,
                       email: str) -> Tuple[bool, User]:
         try:
-            if not self.validator.validate_username(username):
-                raise SecurityException("Invalid username format")
+            if not first_name or len(first_name) == 0:
+                raise SecurityException("First Name cannot be empty")
+
+            if not last_name or len(last_name) == 0:
+                raise SecurityException("Last Name cannot be empty")
 
             if not self.validator.validate_email(email):
                 raise SecurityException("Invalid email format")
@@ -29,11 +32,12 @@ class UserManager:
                     "uppercase, lowercase, numbers, and special characters"
                 )
 
-            username = self.validator.sanitize_input(username)
+            first_name = self.validator.sanitize_input(first_name)
+            last_name = self.validator.sanitize_input(last_name)
             email = self.validator.sanitize_input(email)
 
             hashed_password = PasswordManager.hash_password(password)
-            user = self.user_repository.create_user(username, hashed_password, email)
+            user = self.user_repository.create_user(first_name, last_name, hashed_password, email)
 
             return True, user
 
