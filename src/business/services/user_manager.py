@@ -2,6 +2,7 @@ import logging
 from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
+from src.business.providers.security_context import SecurityContext
 from src.business.utils.password_manager import PasswordManager
 from src.business.utils.validation import Validation
 from src.data_access.user_repository import UserRepository
@@ -12,7 +13,6 @@ class UserManager:
     def __init__(self):
         self.user_repository = UserRepository()
         self.validator = Validation()
-        self.current_user = None
 
     def register(self, first_name: str, last_name: str, password: str,
                       email: str) -> Tuple[bool, User]:
@@ -39,6 +39,7 @@ class UserManager:
             hashed_password = PasswordManager.hash_password(password)
             user = self.user_repository.create_user(first_name, last_name, hashed_password, email)
 
+            SecurityContext.current_user = user
             return True, user
 
         except SecurityException as e:
@@ -52,9 +53,11 @@ class UserManager:
         user = self.user_repository.get_user_by_email(email)
 
         if user and PasswordManager.verify_password(password, user.password_hash):
-            self.current_user = user
+            SecurityContext.current_user = user
             return True, user
         return False, User()
 
     def update_user(self, user_dto: User) -> User:
-        return self.user_repository.update_user(user_dto)
+        user = self.user_repository.update_user(user_dto)
+        SecurityContext.current_user = user
+        return user

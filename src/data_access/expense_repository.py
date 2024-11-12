@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src.data_access.data_access import DataAccess
 from src.database.models.expense import Expense
 
@@ -7,7 +9,7 @@ class ExpenseRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def add_expense(self, user_id, category_id, amount, description, date):
+    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str, date: datetime|None) -> Expense:
         try:
             expense = Expense(
                 user_id=user_id,
@@ -23,7 +25,7 @@ class ExpenseRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def get_user_expenses(self, user_id, start_date=None, end_date=None):
+    def get_user_expenses(self, user_id : str, start_date : datetime|None = None, end_date : datetime|None = None) -> Expense:
         query = self.session.query(Expense).filter_by(user_id=user_id)
         if start_date:
             query = query.filter(Expense.date >= start_date)
