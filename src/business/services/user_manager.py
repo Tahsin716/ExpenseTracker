@@ -9,8 +9,8 @@ from src.database.models.user import User
 
 
 class UserManager:
-    def __init__(self, user_repository: UserRepository):
-        self.user_repository = user_repository
+    def __init__(self):
+        self.user_repository = UserRepository()
         self.validator = Validation()
         self.current_user = None
 
