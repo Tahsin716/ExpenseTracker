@@ -4,7 +4,7 @@ from src.database.models.sale import Sale
 from src.database.models.sale_item import SaleItem
 
 
-class it (DataAccess):
+class SaleRepository(DataAccess):
 
     def __init__(self):
         super().__init__()
