@@ -7,7 +7,7 @@ class InventoryRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def add_inventory_item(self, name, description, quantity, cost_price, selling_price) -> InventoryItem:
+    def create(self, name, description, quantity, cost_price, selling_price) -> InventoryItem:
         try:
             item = InventoryItem(
                 name=name,
@@ -23,7 +23,17 @@ class InventoryRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def update_inventory_quantity(self, item_id, quantity_change) -> InventoryItem:
+    def update(self, item_dto : InventoryItem) -> InventoryItem:
+        try:
+            item = self.session.query(InventoryItem).filter_by(item_id=item_dto.item_id).update({"name": item_dto.name, "description": item_dto.description,
+                    "quantity": item_dto.quantity, "cost_price": item_dto.cost_price, "selling_price": item_dto.selling_price})
+            self.session.commit()
+            return item
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
+    def update_quantity(self, item_id, quantity_change) -> InventoryItem:
         try:
             item = self.session.query(InventoryItem).get(item_id)
             item.quantity += quantity_change

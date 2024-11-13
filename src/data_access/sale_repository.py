@@ -25,7 +25,7 @@ class SaleRepository(DataAccess):
                     price_per_unit=item['price_per_unit']
                 )
                 self.session.add(sale_item)
-                self.inventory_repository.update_inventory_quantity(item['item_id'], -item['quantity'])
+                self.inventory_repository.update_quantity(item['item_id'], -item['quantity'])
 
             self.session.commit()
             return sale
