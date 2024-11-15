@@ -9,14 +9,14 @@ class ExpenseRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str) -> Expense:
+    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str, date: datetime) -> Expense:
         try:
             expense = Expense(
                 user_id=user_id,
                 category_id=category_id,
                 amount=amount,
                 description=description,
-                date=datetime.datetime.now(datetime.timezone.utc)
+                date= date
             )
             self.session.add(expense)
             self.session.commit()
@@ -25,7 +25,7 @@ class ExpenseRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def get_user_expenses(self, user_id : str, start_date : datetime|None = None, end_date : datetime|None = None) -> Expense:
+    def get_user_expenses(self, user_id : str, start_date : datetime, end_date : datetime) -> Expense:
         query = self.session.query(Expense).filter_by(user_id=user_id)
         if start_date:
             query = query.filter(Expense.date >= start_date)

@@ -1,9 +1,10 @@
 import logging
-from datetime import datetime
+import datetime
 from typing import Optional, Dict
 
 from src.business.exception.security_exception import SecurityException
 from src.business.providers.security_context import SecurityContext
+from src.business.utils.common import Common
 from src.business.utils.validation import Validation
 from src.data_access.expense_repository import ExpenseRepository
 
@@ -30,7 +31,7 @@ class ExpenseManager:
                 category_id,
                 amount,
                 description,
-                date or datetime.now()
+                date or datetime.datetime.now(datetime.timezone.utc)
             )
 
         except SecurityException as e:
@@ -45,6 +46,9 @@ class ExpenseManager:
         try:
             if SecurityContext.current_user is None:
                 raise SecurityException("Invalid user")
+
+            if start_date is None or end_date is None:
+                start_date, end_date = Common.get_utc_start_and_end_date()
 
             return self.expense_repository.get_user_expenses(
                 SecurityContext.current_user.user_id,
