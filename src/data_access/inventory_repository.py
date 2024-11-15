@@ -1,3 +1,5 @@
+import logging
+
 from src.data_access.data_access import DataAccess
 from src.data_access.models.inventory_item import InventoryItem
 
@@ -7,7 +9,7 @@ class InventoryRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def create(self, name, description, quantity, cost_price, selling_price) -> InventoryItem:
+    def create(self, name : str, description : str, quantity : int, cost_price: float, selling_price : float) -> InventoryItem:
         try:
             item = InventoryItem(
                 name=name,
@@ -33,7 +35,28 @@ class InventoryRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def update_quantity(self, item_id, quantity_change) -> InventoryItem:
+    def delete(self, item_id: str) -> bool:
+        item = self.session.query(InventoryItem).filter_by(item_id=item_id).first()
+
+        if item is None:
+            logging.log("No InventoryItem found with the given item_id")
+            return False
+
+        try:
+            self.session.query(InventoryItem).filter_by(item_id).delete(synchronize_session=False)
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
+    def get_inventory_items(self) -> list[InventoryItem]:
+        return self.session.query(InventoryItem).all()
+
+    def get_item_by_id(self, item_id : str) -> InventoryItem:
+        return self.session.query(InventoryItem).filter_by(item_id=item_id).first()
+
+    def update_quantity(self, item_id : str, quantity_change : int) -> InventoryItem:
         try:
             item = self.session.query(InventoryItem).get(item_id)
             item.quantity += quantity_change

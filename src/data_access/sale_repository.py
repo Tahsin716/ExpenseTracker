@@ -1,5 +1,6 @@
 from src.data_access.data_access import DataAccess
 from src.data_access.inventory_repository import InventoryRepository
+from src.data_access.models.inventory_item import InventoryItem
 from src.data_access.models.sale import Sale
 from src.data_access.models.sale_item import SaleItem
 
@@ -10,7 +11,7 @@ class SaleRepository(DataAccess):
         super().__init__()
         self.inventory_repository = InventoryRepository()
 
-    def create_sale(self, user_id, items):
+    def create_sale(self, user_id : str, items: list[InventoryItem]) -> Sale:
         try:
             total_amount = sum(item['quantity'] * item['price_per_unit'] for item in items)
             sale = Sale(user_id=user_id, total_amount=total_amount)
@@ -32,3 +33,9 @@ class SaleRepository(DataAccess):
         except Exception as e:
             self.session.rollback()
             raise e
+
+    def get_all_sales(self) -> list[Sale]:
+        return self.session.query(Sale).all()
+
+    def get_sales_by_user_id(self, user_id: str) -> list[Sale]:
+        return self.session.query(Sale).filter_by(user_id=user_id).all()

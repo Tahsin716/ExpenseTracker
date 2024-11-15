@@ -1,8 +1,6 @@
 import logging
 import datetime
 
-from sqlalchemy.sql.functions import current_user
-
 from src.business.exception.security_exception import SecurityException
 from src.business.providers.security_context import SecurityContext
 from src.data_access.data_access import DataAccess
@@ -56,5 +54,5 @@ class UserRepository(DataAccess):
             raise e
 
 
-    def get_user_by_email(self, email):
+    def get_user_by_email(self, email : str) -> User:
         return self.session.query(User).filter_by(email=email).first()
