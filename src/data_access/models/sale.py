@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from sqlalchemy import Integer, Column, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
@@ -12,7 +12,7 @@ class Sale(Base):
     sale_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     total_amount = Column(Float, nullable=False)
-    sale_date = Column(DateTime, default=datetime.utcnow)
+    sale_date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
     user = relationship("User", back_populates="sales")
     sale_items = relationship("SaleItem", back_populates="sale")

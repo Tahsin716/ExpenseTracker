@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from src.data_access.data_access import DataAccess
 from src.data_access.models.expense import Expense
@@ -9,14 +9,14 @@ class ExpenseRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str, date: datetime|None) -> Expense:
+    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str) -> Expense:
         try:
             expense = Expense(
                 user_id=user_id,
                 category_id=category_id,
                 amount=amount,
                 description=description,
-                date=date
+                date=datetime.datetime.now(datetime.timezone.utc)
             )
             self.session.add(expense)
             self.session.commit()
