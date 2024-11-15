@@ -1,7 +1,7 @@
 from src.data_access.data_access import DataAccess
 from src.data_access.inventory_repository import InventoryRepository
-from src.database.models.sale import Sale
-from src.database.models.sale_item import SaleItem
+from src.data_access.models.sale import Sale
+from src.data_access.models.sale_item import SaleItem
 
 
 class SaleRepository(DataAccess):

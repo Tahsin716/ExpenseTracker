@@ -1,4 +1,4 @@
-from src.database.models.user import User
+from src.data_access.models.user import User
 
 
 class SecurityContext:

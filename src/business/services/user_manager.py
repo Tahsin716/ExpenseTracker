@@ -6,7 +6,7 @@ from src.business.providers.security_context import SecurityContext
 from src.business.utils.password_manager import PasswordManager
 from src.business.utils.validation import Validation
 from src.data_access.user_repository import UserRepository
-from src.database.models.user import User
+from src.data_access.models.user import User
 
 
 class UserManager:

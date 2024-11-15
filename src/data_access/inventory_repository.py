@@ -1,5 +1,5 @@
 from src.data_access.data_access import DataAccess
-from src.database.models.inventory_item import InventoryItem
+from src.data_access.models.inventory_item import InventoryItem
 
 
 class InventoryRepository(DataAccess):

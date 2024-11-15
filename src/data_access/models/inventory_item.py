@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, Float, String, DateTime
 from sqlalchemy.orm import relationship
 
-from src.database.models.base import Base
+from src.data_access.models.base import Base
 
 
 class InventoryItem(Base):

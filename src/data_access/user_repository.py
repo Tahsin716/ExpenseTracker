@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from src.business.utils.password_manager import PasswordManager
 from src.data_access.data_access import DataAccess
-from src.database.models.user import User
+from src.data_access.models.user import User
 
 
 class UserRepository(DataAccess):

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from src.data_access.data_access import DataAccess
-from src.database.models.expense import Expense
+from src.data_access.models.expense import Expense
 
 
 class ExpenseRepository(DataAccess):

@@ -1,10 +1,9 @@
 from datetime import datetime
-from email.policy import default
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
-from src.database.models.base import Base
+from src.data_access.models.base import Base
 
 
 class User(Base):

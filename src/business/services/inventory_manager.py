@@ -3,7 +3,7 @@ import logging
 from src.business.exception.security_exception import SecurityException
 from src.business.utils.validation import Validation
 from src.data_access.inventory_repository import InventoryRepository
-from src.database.models.inventory_item import InventoryItem
+from src.data_access.models.inventory_item import InventoryItem
 
 
 class InventoryManagement:
