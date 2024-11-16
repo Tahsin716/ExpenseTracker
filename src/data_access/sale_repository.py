@@ -36,6 +36,3 @@ class SaleRepository(DataAccess):
 
     def get_all_sales(self) -> list[Sale]:
         return self.session.query(Sale).all()
-
-    def get_sales_by_user_id(self, user_id: str) -> list[Sale]:
-        return self.session.query(Sale).filter_by(user_id=user_id).all()
