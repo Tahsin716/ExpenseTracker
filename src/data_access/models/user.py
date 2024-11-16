@@ -1,7 +1,6 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import relationship
 
 from src.data_access.models.base import Base
 
@@ -17,6 +16,3 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     updated_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     role = Column(String(50), nullable=False)
-
-    expenses = relationship("Expense", back_populates="user")
-    sales = relationship("Sale", back_populates="user")

@@ -15,8 +15,7 @@ class InventoryItem(Base):
     quantity = Column(Integer, nullable=False)
     cost_price = Column(Float, nullable=False)
     selling_price = Column(Float, nullable=False)
-    reorder_level = Column(Integer, default=10)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     updated_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc), onupdate=datetime.datetime.now(datetime.timezone.utc))
 
-    sale_items = relationship("SaleItem", back_populates="item")
+    sale_items = relationship("SaleItem", back_populates="inventory_items")

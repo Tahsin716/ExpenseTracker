@@ -10,12 +10,10 @@ class Expense(Base):
     __tablename__ = 'expenses'
 
     expense_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     category_id = Column(Integer, ForeignKey('categories.category_id'), nullable=False)
     amount = Column(Float, nullable=False)
     description = Column(String)
     date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
-    user = relationship("User", back_populates="expenses")
     category = relationship("Category", back_populates="expenses")

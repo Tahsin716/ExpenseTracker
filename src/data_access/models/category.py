@@ -11,4 +11,4 @@ class Category(Base):
     name = Column(String(50), unique=True, nullable=False)
     description = Column(String)
 
-    expenses = relationship("Expense", back_populates="category")
+    expenses = relationship("Expense", back_populates="categories")
