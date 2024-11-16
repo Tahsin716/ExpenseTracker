@@ -18,4 +18,4 @@ class InventoryItem(Base):
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     updated_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc), onupdate=datetime.datetime.now(datetime.timezone.utc))
 
-    sale_items = relationship("SaleItem", back_populates="inventory_items")
+    sale_items = relationship("SaleItem", back_populates="item")

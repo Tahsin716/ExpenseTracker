@@ -14,7 +14,8 @@ class PasswordManager:
 
         try:
             salt = Config.PASSWORD_SALT
-            password_hash = hashlib.sha256(salt + password.encode()).hexdigest()
+            salt_bytes = salt.to_bytes((salt.bit_length() + 7) // 8, byteorder='big')
+            password_hash = hashlib.sha256(salt_bytes + password.encode()).hexdigest()
 
             return password_hash
         except Exception as e:
@@ -25,7 +26,8 @@ class PasswordManager:
     def verify_password(password: str, hashed_password: str) -> bool:
         try:
             salt = Config.PASSWORD_SALT
-            return hashlib.sha256(salt + password.encode()).hexdigest() == hashed_password
+            salt_bytes = salt.to_bytes((salt.bit_length() + 7) // 8, byteorder='big')
+            return hashlib.sha256(salt_bytes + password.encode()).hexdigest() == hashed_password
         except Exception as e:
             logging.error(f"Error verifying password: {str(e)}")
             return False
