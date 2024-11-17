@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from src.presentation.login import Login
+from src.presentation.main_page import MainPage
 from src.presentation.register import Register
 
 
@@ -16,7 +17,7 @@ class Application:
         container.pack(side="top", fill="both", expand=True)
 
         self.frames = {}
-        for F in (Login, Register):
+        for F in (Login, Register, MainPage):
             frame = F(container, self)
             self.frames[F.__name__] = frame
             frame.grid(row=0, column=0, sticky="nsew")

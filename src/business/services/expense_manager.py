@@ -7,6 +7,7 @@ from src.business.providers.security_context import SecurityContext
 from src.business.utils.common import Common
 from src.business.utils.validation import Validation
 from src.data_access.expense_repository import ExpenseRepository
+from src.data_access.models.expense import Expense
 
 
 class ExpenseManager:
@@ -40,6 +41,9 @@ class ExpenseManager:
         except Exception as e:
             logging.error(f"Error adding expense: {str(e)}")
             raise
+
+    def get_all_expense(self) -> list[Expense]:
+        return self.expense_repository.get_all_expenses()
 
     def get_expense_summary(self, start_date: Optional[datetime] = None,
                             end_date: Optional[datetime] = None) -> Dict:

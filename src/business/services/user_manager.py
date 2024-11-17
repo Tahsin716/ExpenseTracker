@@ -57,6 +57,9 @@ class UserManager:
             return True, user
         return False, User()
 
+    def get_all_users(self) -> list[User]:
+        return self.user_repository.get_all_users()
+
     def update_user(self, user_dto: User) -> User:
         user = self.user_repository.update_user(user_dto)
         SecurityContext.current_user = user

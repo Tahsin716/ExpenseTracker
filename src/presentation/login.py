@@ -29,6 +29,8 @@ class Login(ttk.Frame):
 
         if not success:
             messagebox.showerror("Error", "Invalid credentials")
+        else:
+            self.controller.show_frame("MainPage")
 
 
 

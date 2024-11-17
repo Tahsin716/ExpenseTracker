@@ -25,6 +25,9 @@ class ExpenseRepository(DataAccess):
             self.session.rollback()
             raise e
 
+    def get_all_expenses(self) -> list[Expense]:
+        return self.session.query(Expense).all()
+
     def get_user_expenses(self, user_id : str, start_date : datetime, end_date : datetime) -> Expense:
         query = self.session.query(Expense).filter_by(user_id=user_id)
         if start_date:
