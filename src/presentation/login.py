@@ -6,7 +6,6 @@ class Login(ttk.Frame):
         ttk.Frame.__init__(self, parent)
         self.controller = controller
 
-        # Create widgets
         ttk.Label(self, text="Email:").grid(row=0, column=0, pady=5, padx=5)
         self.email = ttk.Entry(self)
         self.email.grid(row=0, column=1, pady=5, padx=5)
@@ -16,7 +15,7 @@ class Login(ttk.Frame):
         self.password.grid(row=1, column=1, pady=5, padx=5)
 
         ttk.Button(self, text="Login", command=self.login).grid(row=2, column=0, pady=10)
-        ttk.Button(self, text="Register", command=lambda: controller.show_frame("RegisterPage")).grid(row=2, column=1,
+        ttk.Button(self, text="Register", command=lambda: controller.show_frame("Register")).grid(row=2, column=1,
                                                                                                       pady=10)
 
     def login(self):
