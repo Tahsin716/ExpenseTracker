@@ -1,10 +1,13 @@
-from tkinter import ttk
+from tkinter import ttk, messagebox
+
+from src.business.services.user_manager import UserManager
 
 
 class Login(ttk.Frame):
     def __init__(self, parent, controller):
         ttk.Frame.__init__(self, parent)
         self.controller = controller
+        self.user_manager = UserManager()
 
         ttk.Label(self, text="Email:").grid(row=0, column=0, pady=5, padx=5)
         self.email = ttk.Entry(self)
@@ -21,4 +24,11 @@ class Login(ttk.Frame):
     def login(self):
         email = self.email.get()
         password = self.password.get()
+
+        success, user = self.user_manager.login(email, password)
+
+        if not success:
+            messagebox.showerror("Error", "Invalid credentials")
+
+
 
