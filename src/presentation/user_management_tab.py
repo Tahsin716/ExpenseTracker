@@ -1,6 +1,7 @@
 from tkinter import ttk, messagebox
 
 from src.business.services.user_manager import UserManager
+from src.presentation.create_user_form import CreateUserForm
 
 
 class UserManagementTab(ttk.Frame):
@@ -48,8 +49,7 @@ class UserManagementTab(ttk.Frame):
             self.action_frame.pack(fill='x', pady=5)
 
     def create_user(self):
-        # Create user form window
-        pass
+        CreateUserForm(self)
 
     def update_user(self):
         selected_item = self.tree.selection()
