@@ -64,5 +64,14 @@ class UserManagementTab(ttk.Frame):
             messagebox.showwarning("Warning", "Please select a user to delete")
             return
 
+        user_data = self.tree.item(selected_item[0], 'values')
+        user_id = int(user_data[0])
+
         if messagebox.askyesno("Confirm", "Are you sure you want to delete this user?"):
-            print("Hello")
+            success , message = self.user_manager.delete_user(user_id)
+
+            if not success:
+                messagebox.showerror("Error", message)
+            else:
+                messagebox.showinfo("Success", "User successfully deleted")
+                self.refresh_users()

@@ -1,11 +1,11 @@
 import logging
 import datetime
+from tkinter.ttk import Treeview
 
 from typing_extensions import Tuple
+from sqlalchemy import Select
 
-from src.business.exception.security_exception import SecurityException
 from src.business.providers.roles import Roles
-from src.business.providers.security_context import SecurityContext
 from src.data_access.data_access import DataAccess
 from src.data_access.models.user import User
 
@@ -40,19 +40,10 @@ class UserRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def delete_user(self, user_id: str) -> bool:
-        if not SecurityContext.current_user.role == 'admin':
-            SecurityException("User does not have permission to delete user")
-
-        response = self.session.query(User).filter_by(user_id=user_id).first()
-
-        if not response:
-            logging.log("No user found with given user_id")
-            return False
-
+    def delete_user(self, user_id: int):
         try:
             self.session.query(User).filter_by(user_id=user_id).delete(synchronize_session=False)
-            return True
+            self.session.commit()
         except Exception as e:
             self.session.rollback()
             raise e
@@ -63,3 +54,10 @@ class UserRepository(DataAccess):
 
     def get_user_by_email(self, email : str) -> User:
         return self.session.query(User).filter_by(email=email).first()
+
+    def get_user_by_id(self, user_id : int) -> User:
+        return self.session.query(User).filter_by(user_id=user_id).first()
+
+    def email_exists(self, email : str) -> bool:
+        exists = self.session.execute(Select(User).where(User.email == email)).scalar()
+        return True if exists else False

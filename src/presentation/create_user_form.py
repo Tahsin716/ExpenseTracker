@@ -36,7 +36,6 @@ class CreateUserForm(tk.Toplevel):
         ttk.Button(self, text="Cancel", command=self.close_form).grid(row=5, column=1, padx=10, pady=10)
 
     def save_user(self):
-        print("Save button clicked.")
         first_name = self.first_name.get()
         last_name = self.last_name.get()
         email = self.email.get()

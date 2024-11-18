@@ -27,6 +27,9 @@ class UserManager:
             if not self.validator.validate_email(email):
                 raise SecurityException("Invalid email format")
 
+            if self.user_repository.email_exists(email):
+                raise SecurityException("Email already exists in the system")
+
             if not self.validator.validate_password(password):
                 raise SecurityException(
                     "Password must be at least 8 characters long and contain "
@@ -63,9 +66,6 @@ class UserManager:
 
     def update_user(self, user_id : int, first_name : str, last_name : str, email : str)  -> Tuple[bool, str, User]:
         try:
-            if SecurityContext.current_user.role == Roles.USER and SecurityContext.current_user.user_id != user_id:
-                raise SecurityException("Current user does not have permission to update the user")
-
             if not first_name or len(first_name) == 0:
                 raise SecurityException("First Name cannot be empty")
 
@@ -85,3 +85,24 @@ class UserManager:
             logging.error(f"Error during user update: {str(e)}")
             return False, str(e), User()
 
+
+    def delete_user(self, user_id : int) -> Tuple[bool, str]:
+        try:
+            if SecurityContext.current_user.user_id == user_id:
+                raise SecurityException("Cannot delete logged in user")
+
+            user = self.user_repository.get_user_by_id(user_id)
+
+            if SecurityContext.current_user.role == Roles.USER and user.role == Roles.ADMIN:
+                raise  SecurityException("User does not have permission to delete an admin")
+
+            self.user_repository.delete_user(user_id)
+            return True, ""
+
+        except SecurityException as e:
+            logging.error(f"Security exception during user delete: {str(e)}")
+            return False, str(e)
+
+        except Exception as e:
+            logging.error(f"Error during user delete: {str(e)}")
+            return False, str(e)
