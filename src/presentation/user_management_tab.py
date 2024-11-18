@@ -49,7 +49,7 @@ class UserManagementTab(ttk.Frame):
             self.action_frame.pack(fill='x', pady=5)
 
     def create_user(self):
-        CreateUserForm(self)
+        CreateUserForm(self, self.refresh_users)
 
     def update_user(self):
         selected_item = self.tree.selection()

@@ -2,6 +2,7 @@ import logging
 import datetime
 
 from src.business.exception.security_exception import SecurityException
+from src.business.providers.roles import Roles
 from src.business.providers.security_context import SecurityContext
 from src.data_access.data_access import DataAccess
 from src.data_access.models.user import User
@@ -12,13 +13,14 @@ class UserRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def create_user(self, first_name, last_name, password_hash, email) -> User:
+    def create_user(self, first_name : str, last_name : str, password_hash : str, email : str, is_admin : bool) -> User:
         try:
             user = User(
                 first_name=first_name,
                 last_name=last_name,
                 password_hash=password_hash,
-                email=email
+                email=email,
+                role= Roles.ADMIN if is_admin else Roles.USER
             )
             self.session.add(user)
             self.session.commit()

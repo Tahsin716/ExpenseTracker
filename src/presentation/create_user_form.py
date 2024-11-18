@@ -1,10 +1,14 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+
+from src.business.services.user_manager import UserManager
 
 
 class CreateUserForm(tk.Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, callback):
         super().__init__(parent)
+        self.user_manager = UserManager()
+        self.callback = callback
         self.title("Create User")
         self.geometry("400x300")
 
@@ -33,11 +37,22 @@ class CreateUserForm(tk.Toplevel):
 
     def save_user(self):
         print("Save button clicked.")
-        print(f"First Name: {self.first_name.get()}")
-        print(f"Last Name: {self.last_name.get()}")
-        print(f"Email: {self.email.get()}")
-        print(f"Password: {self.password.get()}")
-        print(f"Is Admin: {self.is_admin.get()}")
+        first_name = self.first_name.get()
+        last_name = self.last_name.get()
+        email = self.email.get()
+        password = self.password.get()
+        is_admin = self.is_admin.get()
+
+        success, message, user = self.user_manager.register(first_name, last_name, password, email, is_admin)
+
+        if not success:
+            messagebox.showerror("Error", message)
+        else:
+            messagebox.showinfo("Success", "User created successfully!")
+            self.callback()
+            self.close_form()
+
+
 
     def close_form(self):
         self.destroy()

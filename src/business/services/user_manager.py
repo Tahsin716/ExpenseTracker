@@ -15,7 +15,7 @@ class UserManager:
         self.validator = Validation()
 
     def register(self, first_name: str, last_name: str, password: str,
-                      email: str) -> Tuple[bool, str, User]:
+                      email: str, is_admin : bool) -> Tuple[bool, str, User]:
         try:
             if not first_name or len(first_name) == 0:
                 raise SecurityException("First Name cannot be empty")
@@ -37,7 +37,7 @@ class UserManager:
             email = self.validator.sanitize_input(email)
 
             hashed_password = PasswordManager.hash_password(password)
-            user = self.user_repository.create_user(first_name, last_name, hashed_password, email)
+            user = self.user_repository.create_user(first_name, last_name, hashed_password, email, is_admin)
 
             SecurityContext.current_user = user
             return True, "", user
