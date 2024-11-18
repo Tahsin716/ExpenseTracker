@@ -12,18 +12,17 @@ class MainPage(ttk.Frame):
 
         self.notebook = ttk.Notebook(self)
 
-        tabs = [
-            ("Users", UserManagementTab),
-            ("Expenses", ExpensesTab),
-            # ("Inventory", InventoryTab),
-            # ("Sales", SalesTab),
-            # ("Sales Tracking", SalesTrackingTab),
-            # ("Reporting", ReportingTab)
-        ]
+        self.tabs = {
+            "Users": UserManagementTab(self.notebook),
+            "Expenses": ExpensesTab(self.notebook),
+            # "Inventory": InventoryTab(self.notebook),
+            # "Sales": SalesTab(self.notebook),
+            # "Sales Tracking": SalesTrackingTab(self.notebook),
+            # "Reporting": ReportingTab(self.notebook)
+        }
 
-        for tab_name, tab_class in tabs:
-            tab = tab_class(self.notebook)
-            self.notebook.add(tab, text=tab_name)
+        for tab_name, tab_instance in self.tabs.items():
+            self.notebook.add(tab_instance, text=tab_name)
 
         self.notebook.pack(expand=True, fill='both')
 

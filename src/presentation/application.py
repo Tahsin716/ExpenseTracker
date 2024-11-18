@@ -27,6 +27,12 @@ class Application:
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
+
+        if page_name == "MainPage":
+            user_management_tab = frame.tabs["Users"]
+            if user_management_tab:
+                user_management_tab.refresh_users()
+
         frame.tkraise()
 
 

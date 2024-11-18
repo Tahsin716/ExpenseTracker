@@ -58,6 +58,7 @@ class UserRepository(DataAccess):
             raise e
 
     def get_all_users(self) -> list[User]:
+        self.session.expire_all()
         return self.session.query(User).all()
 
     def get_user_by_email(self, email : str) -> User:
