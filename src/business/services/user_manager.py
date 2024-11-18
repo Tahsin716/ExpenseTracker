@@ -27,8 +27,10 @@ class UserManager:
             if not self.validator.validate_email(email):
                 raise SecurityException("Invalid email format")
 
-            if self.user_repository.email_exists(email):
-                raise SecurityException("Email already exists in the system")
+            user = self.user_repository.get_user_by_email(email)
+
+            if not user is None:
+                raise SecurityException("A user already exists with the given email")
 
             if not self.validator.validate_password(password):
                 raise SecurityException(
@@ -74,6 +76,11 @@ class UserManager:
 
             if not self.validator.validate_email(email):
                 raise SecurityException("Invalid email format")
+
+            user = self.user_repository.get_user_by_email(email)
+
+            if not user is None and user.user_id != user_id:
+                raise SecurityException("A user already exists with the given email")
 
             return self.user_repository.update_user(user_id, first_name, last_name, email)
 

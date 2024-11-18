@@ -57,7 +57,3 @@ class UserRepository(DataAccess):
 
     def get_user_by_id(self, user_id : int) -> User:
         return self.session.query(User).filter_by(user_id=user_id).first()
-
-    def email_exists(self, email : str) -> bool:
-        exists = self.session.execute(Select(User).where(User.email == email)).scalar()
-        return True if exists else False
