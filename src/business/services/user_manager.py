@@ -2,6 +2,7 @@ import logging
 from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
+from src.business.providers.roles import Roles
 from src.business.providers.security_context import SecurityContext
 from src.business.utils.password_manager import PasswordManager
 from src.business.utils.validation import Validation
@@ -49,7 +50,7 @@ class UserManager:
             logging.error(f"Error during registration: {str(e)}")
             return False, str(e), User()
 
-    def login(self, email: str, password: str) -> Tuple[bool, User]:
+    def login(self, email: str, password: str) -> Tuple[bool,User]:
         user = self.user_repository.get_user_by_email(email)
 
         if user and PasswordManager.verify_password(password, user.password_hash):
@@ -60,7 +61,27 @@ class UserManager:
     def get_all_users(self) -> list[User]:
         return self.user_repository.get_all_users()
 
-    def update_user(self, user_dto: User) -> User:
-        user = self.user_repository.update_user(user_dto)
-        SecurityContext.current_user = user
-        return user
+    def update_user(self, user_id : int, first_name : str, last_name : str, email : str)  -> Tuple[bool, str, User]:
+        try:
+            if SecurityContext.current_user.role == Roles.USER and SecurityContext.current_user.user_id != user_id:
+                raise SecurityException("Current user does not have permission to update the user")
+
+            if not first_name or len(first_name) == 0:
+                raise SecurityException("First Name cannot be empty")
+
+            if not last_name or len(last_name) == 0:
+                raise SecurityException("Last Name cannot be empty")
+
+            if not self.validator.validate_email(email):
+                raise SecurityException("Invalid email format")
+
+            return self.user_repository.update_user(user_id, first_name, last_name, email)
+
+        except SecurityException as e:
+            logging.error(f"Security exception during user update: {str(e)}")
+            return False, str(e), User()
+
+        except Exception as e:
+            logging.error(f"Error during user update: {str(e)}")
+            return False, str(e), User()
+

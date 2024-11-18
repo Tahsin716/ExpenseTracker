@@ -1,6 +1,8 @@
 import logging
 import datetime
 
+from typing_extensions import Tuple
+
 from src.business.exception.security_exception import SecurityException
 from src.business.providers.roles import Roles
 from src.business.providers.security_context import SecurityContext
@@ -29,11 +31,11 @@ class UserRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def update_user(self, user_dto : User) -> User:
+    def update_user(self, user_id : int, first_name : str, last_name : str, email : str) -> Tuple[bool, str, User]:
         try:
-            user = self.session.query(User).filter_by(user_id=user_dto.user_id).update({'email': user_dto.email, 'first_name': user_dto.first_name, 'last_name': user_dto.last_name, 'updated_at': datetime.datetime.now(datetime.timezone.utc)})
+            user = self.session.query(User).filter_by(user_id=user_id).update({'email': email, 'first_name': first_name, 'last_name': last_name, 'updated_at': datetime.datetime.now(datetime.timezone.utc)})
             self.session.commit()
-            return user
+            return True, "", user
         except Exception as e:
             self.session.rollback()
             raise e

@@ -2,19 +2,13 @@ from tkinter import ttk, messagebox
 
 from src.business.services.user_manager import UserManager
 from src.presentation.create_user_form import CreateUserForm
+from src.presentation.update_user_form import UpdateUserForm
 
 
 class UserManagementTab(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
         self.user_manager = UserManager()
-
-        self.tree = ttk.Treeview(self, columns=('ID', 'First Name', 'Last Name', 'Email', 'Role'), show='headings')
-        self.tree.heading('ID', text='ID')
-        self.tree.heading('First Name', text='First Name')
-        self.tree.heading('Last Name', text='Last Name')
-        self.tree.heading('Email', text='Email')
-        self.tree.heading('Role', text='Role')
 
         self.action_frame = ttk.Frame(self)
         self.create_button = ttk.Button(self.action_frame, text="Create User", command=self.create_user)
@@ -24,8 +18,15 @@ class UserManagementTab(ttk.Frame):
         self.update_button.pack(side='left', padx=5)
         self.delete_button.pack(side='left', padx=5)
 
-        self.tree.pack(expand=True, fill='both', padx=10, pady=10)
+        self.tree = ttk.Treeview(self, columns=('ID', 'First Name', 'Last Name', 'Email', 'Role'), show='headings')
+        self.tree.heading('ID', text='ID')
+        self.tree.heading('First Name', text='First Name')
+        self.tree.heading('Last Name', text='Last Name')
+        self.tree.heading('Email', text='Email')
+        self.tree.heading('Role', text='Role')
+
         self.action_frame.pack(fill='x', pady=5)
+        self.tree.pack(expand=True, fill='both', padx=10, pady=10)
 
         self.tree.bind('<<TreeviewSelect>>', self.on_row_select)
 
@@ -43,10 +44,6 @@ class UserManagementTab(ttk.Frame):
     def on_row_select(self, event):
         selected_item = self.tree.selection()
 
-        if not selected_item:
-            self.action_frame.pack_forget()
-        else:
-            self.action_frame.pack(fill='x', pady=5)
 
     def create_user(self):
         CreateUserForm(self, self.refresh_users)
@@ -59,7 +56,7 @@ class UserManagementTab(ttk.Frame):
             return
 
         user_data = self.tree.item(selected_item[0], 'values')
-        print(f"Updating user: {user_data}")
+        UpdateUserForm(self, user_data, self.refresh_users)
 
     def delete_user(self):
         selected_item = self.tree.selection()
