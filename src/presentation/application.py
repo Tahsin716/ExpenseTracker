@@ -11,7 +11,7 @@ class Application:
     def __init__(self):
         root = tk.Tk()
         root.title("Coffee Shop")
-        root.geometry("800x600")
+        root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth() - 50, root.winfo_screenheight() - 50))
 
         container = ttk.Frame()
         container.pack(side="top", fill="both", expand=True)

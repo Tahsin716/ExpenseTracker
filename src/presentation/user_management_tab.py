@@ -8,18 +8,26 @@ class UserManagementTab(ttk.Frame):
         ttk.Frame.__init__(self, parent)
         self.user_manager = UserManager()
 
-        self.tree = ttk.Treeview(self, columns=('ID', 'First Name', 'Last Name', 'Email', 'Role'))
+        self.tree = ttk.Treeview(self, columns=('ID', 'First Name', 'Last Name', 'Email', 'Role'), show='headings')
         self.tree.heading('ID', text='ID')
         self.tree.heading('First Name', text='First Name')
         self.tree.heading('Last Name', text='Last Name')
         self.tree.heading('Email', text='Email')
         self.tree.heading('Role', text='Role')
 
-        ttk.Button(self, text="Create User", command=self.create_user).pack()
-        ttk.Button(self, text="Update User", command=self.update_user).pack()
-        ttk.Button(self, text="Delete User", command=self.delete_user).pack()
+        self.action_frame = ttk.Frame(self)
+        self.create_button = ttk.Button(self.action_frame, text="Create User", command=self.create_user)
+        self.update_button = ttk.Button(self.action_frame, text="Update User", command=self.update_user)
+        self.delete_button = ttk.Button(self.action_frame, text="Delete User", command=self.delete_user)
+        self.create_button.pack(side='left', padx=5)
+        self.update_button.pack(side='left', padx=5)
+        self.delete_button.pack(side='left', padx=5)
 
-        self.tree.pack(expand=True, fill='both')
+        self.tree.pack(expand=True, fill='both', padx=10, pady=10)
+        self.action_frame.pack(fill='x', pady=5)
+
+        self.tree.bind('<<TreeviewSelect>>', self.on_row_select)
+
         self.refresh_users()
 
     def refresh_users(self):
@@ -29,16 +37,29 @@ class UserManagementTab(ttk.Frame):
             self.tree.delete(item)
 
         for user in users:
-            self.tree.insert('', 'end', values=(user.user_id, user.first_name,
-                                                user.last_name, user.email, user.role))
+            self.tree.insert('', 'end', values=(user.user_id, user.first_name, user.last_name, user.email, user.role))
+
+    def on_row_select(self, event):
+        selected_item = self.tree.selection()
+
+        if not selected_item:
+            self.action_frame.pack_forget()
+        else:
+            self.action_frame.pack(fill='x', pady=5)
 
     def create_user(self):
         # Create user form window
         pass
 
     def update_user(self):
-        # Update user form window
-        pass
+        selected_item = self.tree.selection()
+
+        if not selected_item:
+            messagebox.showwarning("Warning", "Please select a user to update")
+            return
+
+        user_data = self.tree.item(selected_item[0], 'values')
+        print(f"Updating user: {user_data}")
 
     def delete_user(self):
         selected_item = self.tree.selection()
