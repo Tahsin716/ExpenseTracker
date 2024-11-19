@@ -34,8 +34,6 @@ class UserManagementTab(ttk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.tree.bind('<<TreeviewSelect>>', self.on_row_select)
-
         self.refresh_users()
 
     def refresh_users(self):
@@ -46,9 +44,6 @@ class UserManagementTab(ttk.Frame):
 
         for user in users:
             self.tree.insert('', 'end', values=(user.user_id, user.first_name, user.last_name, user.email, user.role))
-
-    def on_row_select(self, event):
-        selected_item = self.tree.selection()
 
 
     def create_user(self):
