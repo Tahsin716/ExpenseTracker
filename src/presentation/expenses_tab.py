@@ -8,15 +8,21 @@ class ExpensesTab(ttk.Frame):
         ttk.Frame.__init__(self, parent)
         self.expense_manager = ExpenseManager()
 
-        self.tree = ttk.Treeview(self, columns=('ID', 'Category', 'Amount', 'Description', 'Date'))
+        self.action_frame = ttk.Frame(self)
+
+        self.tree = ttk.Treeview(self, columns=('ID', 'Category', 'Amount', 'Description', 'Date'), show='headings')
         self.tree.heading('ID', text='ID')
         self.tree.heading('Category', text='Category')
         self.tree.heading('Amount', text='Amount')
         self.tree.heading('Description', text='Description')
         self.tree.heading('Date', text='Date')
 
-        ttk.Button(self, text="Create Expense", command=self.create_expense).pack()
-        self.tree.pack(expand=True, fill='both')
+        self.create_button = ttk.Button(self.action_frame, text="Create Expense", command=self.create_expense)
+        self.create_button.pack(side='left', padx=5)
+
+        self.action_frame.pack(fill='x', pady=5)
+
+        self.tree.pack(expand=True, fill='both', padx=10, pady=10)
         self.refresh_expenses()
 
     def refresh_expenses(self):
