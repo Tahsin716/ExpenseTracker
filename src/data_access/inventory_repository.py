@@ -50,7 +50,7 @@ class InventoryRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def get_inventory_items(self) -> list[InventoryItem]:
+    def get_all_inventory_items(self) -> list[InventoryItem]:
         return self.session.query(InventoryItem).all()
 
     def get_item_by_id(self, item_id : str) -> InventoryItem:

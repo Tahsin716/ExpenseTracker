@@ -6,7 +6,7 @@ from src.data_access.inventory_repository import InventoryRepository
 from src.data_access.models.inventory_item import InventoryItem
 
 
-class InventoryManagement:
+class InventoryManager:
     def __init__(self):
         self.inventory_repository = InventoryRepository()
         self.validator = Validation()
@@ -48,3 +48,6 @@ class InventoryManagement:
             raise SecurityException("Values cannot be negative")
 
         return self.inventory_repository.update(item_dto)
+
+    def get_all_inventory_items(self) -> list[InventoryItem]:
+        return self.inventory_repository.get_all_inventory_items()
