@@ -1,8 +1,8 @@
 from tkinter import ttk, messagebox
 
 from src.business.services.user_manager import UserManager
-from src.presentation.create_user_form import CreateUserForm
-from src.presentation.update_user_form import UpdateUserForm
+from src.presentation.user_management.create_user_form import CreateUserForm
+from src.presentation.user_management.update_user_form import UpdateUserForm
 
 
 class UserManagementTab(ttk.Frame):

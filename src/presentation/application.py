@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.presentation.login import Login
+from src.presentation.auth.login import Login
 from src.presentation.main_page import MainPage
-from src.presentation.register import Register
+from src.presentation.auth.register import Register
 
 
 class Application:

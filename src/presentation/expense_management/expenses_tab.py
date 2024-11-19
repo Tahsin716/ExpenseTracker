@@ -1,7 +1,7 @@
 from tkinter import ttk
 
 from src.business.services.expense_manager import ExpenseManager
-from src.presentation.create_expense_form import CreateExpenseForm
+from src.presentation.expense_management.create_expense_form import CreateExpenseForm
 
 
 class ExpensesTab(ttk.Frame):
