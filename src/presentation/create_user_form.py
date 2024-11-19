@@ -46,6 +46,7 @@ class CreateUserForm(tk.Toplevel):
 
         if not success:
             messagebox.showerror("Error", message)
+            self.focus()
         else:
             messagebox.showinfo("Success", "User created successfully!")
             self.callback()

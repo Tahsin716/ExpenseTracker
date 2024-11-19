@@ -23,6 +23,13 @@ class ExpensesTab(ttk.Frame):
         self.action_frame.pack(fill='x', pady=5)
 
         self.tree.pack(expand=True, fill='both', padx=10, pady=10)
+
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=scrollbar.set)
+
+        self.tree.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
         self.refresh_expenses()
 
     def refresh_expenses(self):
