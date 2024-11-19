@@ -1,6 +1,6 @@
 import logging
 import datetime
-from typing import Optional, Dict
+from typing import Optional, Dict, Tuple
 
 from src.business.exception.security_exception import SecurityException
 from src.business.providers.security_context import SecurityContext
@@ -16,31 +16,31 @@ class ExpenseManager:
         self.expense_repository = ExpenseRepository()
         self.validator = Validation()
 
-    def add_expense(self, category_id: str, amount: float,
-                    description: str, date: Optional[datetime] = None) -> bool:
+    def add_expense(self, category_id: int, amount: float,
+                    description: str, date_str: str) -> Tuple[bool, str, Expense]:
         try:
             description = self.validator.sanitize_input(description)
-
-            if SecurityContext.current_user is None:
-                raise SecurityException("Invalid user")
 
             if not isinstance(amount, (int, float)) or amount <= 0:
                 raise SecurityException("Invalid amount")
 
-            return self.expense_repository.add_expense(
-                SecurityContext.current_user.user_id,
-                category_id,
-                amount,
-                description,
-                date or datetime.datetime.now(datetime.timezone.utc)
-            )
+            if date_str:
+                if not self.validator.validate_date_format(date_str):
+                    raise SecurityException("Invalid date format, date format is YYYY-MM-DD")
+                else:
+                    date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            else:
+                date = datetime.datetime.now(datetime.timezone.utc)
+
+            expense = self.expense_repository.add_expense(category_id, amount, description, date)
+            return True, "", expense
 
         except SecurityException as e:
             logging.error(f"Security error adding expense: {str(e)}")
-            raise
+            return False, str(e), Expense()
         except Exception as e:
             logging.error(f"Error adding expense: {str(e)}")
-            raise
+            return False, str(e), Expense()
 
     def get_all_expense(self) -> list[Expense]:
         return self.expense_repository.get_all_expenses()

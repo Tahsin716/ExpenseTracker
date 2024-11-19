@@ -1,5 +1,6 @@
 import re
 import html
+from datetime import datetime
 
 from src.business.utils.config import Config
 
@@ -39,3 +40,12 @@ class Validation:
     @staticmethod
     def sanitize_input(input_string: str) -> str:
         return html.escape(input_string.strip())
+
+    """Validate the input date string is a valid date"""
+    @staticmethod
+    def validate_date_format(date_str : str) -> bool:
+        try:
+            datetime.strptime(date_str, '%Y-%m-%d')
+            return True
+        except ValueError:
+            return False

@@ -9,10 +9,9 @@ class ExpenseRepository(DataAccess):
     def __init__(self):
         super().__init__()
 
-    def add_expense(self, user_id : str, category_id : str, amount : int | float, description : str, date: datetime) -> Expense:
+    def add_expense(self, category_id : int, amount : float, description : str, date: datetime) -> Expense:
         try:
             expense = Expense(
-                user_id=user_id,
                 category_id=category_id,
                 amount=amount,
                 description=description,
