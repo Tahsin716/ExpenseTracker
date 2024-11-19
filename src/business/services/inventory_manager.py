@@ -63,7 +63,7 @@ class InventoryManager:
             try:
                 quantity = int(quantity)
             except ValueError:
-                raise SecurityException("Quantity has to be an integer")
+                raise SecurityException("Invalid Quantity")
 
             try:
                 cost_price = float(cost_price)
