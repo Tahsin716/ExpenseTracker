@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 from src.business.services.expense_manager import ExpenseManager
+from src.presentation.expense_management.create_category_form import CreateCategoryForm
 from src.presentation.expense_management.create_expense_form import CreateExpenseForm
 
 
@@ -20,6 +21,9 @@ class ExpensesTab(ttk.Frame):
 
         self.create_button = ttk.Button(self.action_frame, text="Create Expense", command=self.create_expense)
         self.create_button.pack(side='left', padx=5)
+
+        self.create_category = ttk.Button(self.action_frame, text="Create Category", command=self.create_category)
+        self.create_category.pack(side='left', padx=5)
 
         self.action_frame.pack(fill='x', pady=5)
 
@@ -46,3 +50,6 @@ class ExpensesTab(ttk.Frame):
 
     def create_expense(self):
         CreateExpenseForm(self, self.refresh_expenses)
+
+    def create_category(self):
+        CreateCategoryForm(self)

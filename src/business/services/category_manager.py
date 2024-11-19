@@ -19,13 +19,13 @@ class CategoryManager:
             if not name or len(name) == 0:
                 raise SecurityException("name cannot be empty")
 
-            if not description or len(description) == 0:
-                raise SecurityException("description cannot be empty")
-
             exists = self.get_category_by_name(name)
 
             if exists:
                 raise SecurityException("Category with the given name already exists")
+
+            name = self.validator.sanitize_input(name)
+            description = self.validator.sanitize_input(description)
 
             category = self.category_repository.add_category(name, description)
             return True, "", category
