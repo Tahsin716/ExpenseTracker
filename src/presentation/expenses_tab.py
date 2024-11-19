@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 from src.business.services.expense_manager import ExpenseManager
+from src.presentation.create_expense_form import CreateExpenseForm
 
 
 class ExpensesTab(ttk.Frame):
@@ -44,4 +45,4 @@ class ExpensesTab(ttk.Frame):
                                                 expense.date.strftime('%Y-%m-%d')))
 
     def create_expense(self):
-        print("Hello")
+        CreateExpenseForm(self, self.refresh_expenses)

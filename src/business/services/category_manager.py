@@ -37,5 +37,8 @@ class CategoryManager:
             logging.error(f"Exception while adding category: {str(e)}")
             return False, str(e), Category()
 
+    def get_all_categories(self) -> list[Category]:
+        return self.category_repository.get_all_categories()
+
     def get_category_by_name(self, name : str) -> Category:
         return self.category_repository.get_category_by_name(name)

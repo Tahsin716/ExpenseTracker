@@ -20,7 +20,7 @@ class CategoryRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def get_categories(self) -> list[Category]:
+    def get_all_categories(self) -> list[Category]:
         return self.session.query(Category).all()
 
     def get_category_by_name(self, name) -> Category:

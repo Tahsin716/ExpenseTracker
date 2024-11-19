@@ -16,10 +16,14 @@ class ExpenseManager:
         self.expense_repository = ExpenseRepository()
         self.validator = Validation()
 
-    def add_expense(self, category_id: int, amount: float,
+    def add_expense(self, category_id: int, amount: str,
                     description: str, date_str: str) -> Tuple[bool, str, Expense]:
         try:
             description = self.validator.sanitize_input(description)
+            amount = float(amount)
+
+            if not category_id:
+                raise SecurityException("Category cannot be empty")
 
             if not isinstance(amount, (int, float)) or amount <= 0:
                 raise SecurityException("Invalid amount")
@@ -38,6 +42,8 @@ class ExpenseManager:
         except SecurityException as e:
             logging.error(f"Security error adding expense: {str(e)}")
             return False, str(e), Expense()
+        except ValueError:
+            return False, "Invalid amount", Expense()
         except Exception as e:
             logging.error(f"Error adding expense: {str(e)}")
             return False, str(e), Expense()
