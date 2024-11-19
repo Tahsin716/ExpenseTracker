@@ -1,4 +1,5 @@
 import logging
+from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
 from src.business.utils.validation import Validation
@@ -12,42 +13,81 @@ class InventoryManager:
         self.validator = Validation()
 
     def create_item(self, name: str, description: str,
-                 quantity: int, cost_price: float,
-                 selling_price: float) -> InventoryItem:
+                 quantity: str, cost_price: str,
+                 selling_price: str) -> Tuple[bool, str, InventoryItem]:
         try:
+            if not name or len(name) == 0:
+                raise SecurityException("Name cannot be empty")
+
             name = self.validator.sanitize_input(name)
             description = self.validator.sanitize_input(description)
 
-            if not all(isinstance(x, (int, float)) for x in
-                       [quantity, cost_price, selling_price]):
-                raise SecurityException("Invalid numeric values")
+            try:
+                quantity = int(quantity)
+            except ValueError:
+                raise SecurityException("Quantity has to be an integer")
+
+            try:
+                cost_price = float(cost_price)
+            except ValueError:
+                raise SecurityException("Invalid Cost Price")
+
+            try:
+                selling_price = float(selling_price)
+            except ValueError:
+                raise SecurityException("Invalid Selling Price")
 
             if any(x < 0 for x in [quantity, cost_price, selling_price]):
-                raise SecurityException("Values cannot be negative")
+                raise SecurityException("Quantity, Cost Price and Selling Price cannot be negative")
 
-            return self.inventory_repository.create(
-                name, description, quantity, cost_price, selling_price)
+            item = self.inventory_repository.add_inventory_item(name, description, quantity, cost_price, selling_price)
+
+            return True, "", item
 
         except SecurityException as e:
             logging.error(f"SecurityException adding inventory item: {str(e)}")
-            raise
+            return False, str(e), InventoryItem()
         except Exception as e:
             logging.error(f"Error adding inventory item: {str(e)}")
-            raise
+            return False, str(e), InventoryItem()
 
-    def update_item(self, item_dto : InventoryItem) -> InventoryItem:
-        item_dto.name = self.validator.sanitize_input(item_dto.name)
-        item_dto.description = self.validator.sanitize_input(item_dto.description)
+    def update_item(self, item_id: str, name : str, description : str, quantity : str, cost_price : str, selling_price : str) -> Tuple[bool, str, InventoryItem]:
+        try:
+            if not name or len(name) == 0:
+                raise SecurityException("Name cannot be empty")
 
-        if not all(isinstance(x, (int, float)) for x in
-                   [item_dto.quantity, item_dto.cost_price, item_dto.selling_price]):
-            raise SecurityException("Invalid numeric values")
+            item_id = int(item_id)
+            name = self.validator.sanitize_input(name)
+            description = self.validator.sanitize_input(description)
 
-        if any(x < 0 for x in [item_dto.quantity, item_dto.cost_price, item_dto.
-                selling_price]):
-            raise SecurityException("Values cannot be negative")
+            try:
+                quantity = int(quantity)
+            except ValueError:
+                raise SecurityException("Quantity has to be an integer")
 
-        return self.inventory_repository.update(item_dto)
+            try:
+                cost_price = float(cost_price)
+            except ValueError:
+                raise SecurityException("Invalid Cost Price")
+
+            try:
+                selling_price = float(selling_price)
+            except ValueError:
+                raise SecurityException("Invalid Selling Price")
+
+            if any(x < 0 for x in [quantity, cost_price, selling_price]):
+                raise SecurityException("Quantity, Cost Price and Selling Price cannot be negative")
+
+            item = self.inventory_repository.update_inventory_item(item_id, name, description, quantity, cost_price, selling_price)
+
+            return True, "", item
+
+        except SecurityException as e:
+            logging.error(f"SecurityException adding inventory item: {str(e)}")
+            return False, str(e), InventoryItem()
+        except Exception as e:
+            logging.error(f"Error adding inventory item: {str(e)}")
+            return False, str(e), InventoryItem()
 
     def get_all_inventory_items(self) -> list[InventoryItem]:
         return self.inventory_repository.get_all_inventory_items()

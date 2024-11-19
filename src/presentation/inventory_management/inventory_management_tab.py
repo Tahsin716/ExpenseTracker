@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 from src.business.services.inventory_manager import InventoryManager
+from src.presentation.inventory_management.create_inventory_form import CreateInventoryForm
 
 
 class InventoryManagementTab(ttk.Frame):
@@ -33,9 +34,9 @@ class InventoryManagementTab(ttk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.refresh_users()
+        self.refresh_items()
 
-    def refresh_users(self):
+    def refresh_items(self):
         items = self.inventory_manager.get_all_inventory_items()
 
         for item in self.tree.get_children():
@@ -46,7 +47,7 @@ class InventoryManagementTab(ttk.Frame):
 
 
     def create_inventory_item(self):
-        pass
+        CreateInventoryForm(self, self.refresh_items)
 
     def update_inventory_item(self):
         pass
