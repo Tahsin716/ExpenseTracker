@@ -1,7 +1,8 @@
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from src.business.services.inventory_manager import InventoryManager
 from src.presentation.inventory_management.create_inventory_form import CreateInventoryForm
+from src.presentation.inventory_management.update_inventory_form import UpdateInventoryForm
 
 
 class InventoryManagementTab(ttk.Frame):
@@ -50,7 +51,14 @@ class InventoryManagementTab(ttk.Frame):
         CreateInventoryForm(self, self.refresh_items)
 
     def update_inventory_item(self):
-        pass
+        selected_item = self.tree.selection()
+
+        if not selected_item:
+            messagebox.showwarning("Warning", "Please select a user to update")
+            return
+
+        user_data = self.tree.item(selected_item[0], 'values')
+        UpdateInventoryForm(self, user_data, self.refresh_items)
 
     def delete_inventory_item(self):
         pass
