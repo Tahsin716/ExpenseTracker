@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from src.business.services.inventory_manager import InventoryManager
 
@@ -7,7 +7,7 @@ from src.business.services.inventory_manager import InventoryManager
 class UpdateInventoryForm(tk.Toplevel):
     def __init__(self, parent, user_data, callback):
         super().__init__(parent)
-        self.user_manager = InventoryManager()
+        self.inventory_manager = InventoryManager()
         self.title("Update Inventory")
         self.geometry("400x300")
 
@@ -44,7 +44,23 @@ class UpdateInventoryForm(tk.Toplevel):
         ttk.Button(self, text="Cancel", command=self.close_form).grid(row=5, column=1, padx=10, pady=10)
 
     def update_inventory(self):
-        pass
+        item_id = self.user_data[0]
+        name = self.name.get()
+        description = self.description.get()
+        quantity = self.quantity.get()
+        cost_price = self.cost_price.get()
+        selling_price = self.selling_price.get()
+
+        success, message, item = self.inventory_manager.update_item(item_id,name, description, quantity, cost_price,
+                                                                    selling_price)
+
+        if not success:
+            messagebox.showerror("Error", message)
+            self.focus()
+        else:
+            messagebox.showinfo("Success", "Successfully updated inventory item")
+            self.callback()
+            self.close_form()
 
     def close_form(self):
         self.destroy()
