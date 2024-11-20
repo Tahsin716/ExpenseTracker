@@ -35,17 +35,10 @@ class InventoryRepository(DataAccess):
             self.session.rollback()
             raise e
 
-    def delete(self, item_id: str) -> bool:
-        item = self.session.query(InventoryItem).filter_by(item_id=item_id).first()
-
-        if item is None:
-            logging.log("No InventoryItem found with the given item_id")
-            return False
-
+    def delete_item(self, item_id: int) :
         try:
-            self.session.query(InventoryItem).filter_by(item_id).delete(synchronize_session=False)
+            self.session.query(InventoryItem).filter_by(item_id=item_id).delete(synchronize_session=False)
             self.session.commit()
-            return True
         except Exception as e:
             self.session.rollback()
             raise e

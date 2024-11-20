@@ -61,4 +61,18 @@ class InventoryManagementTab(ttk.Frame):
         UpdateInventoryForm(self, user_data, self.refresh_items)
 
     def delete_inventory_item(self):
-        pass
+        selected_item = self.tree.selection()
+        if not selected_item:
+            messagebox.showwarning("Warning", "Please select an item to delete")
+            return
+
+        user_data = self.tree.item(selected_item[0], 'values')
+
+        if messagebox.askyesno("Confirm", "Are you sure you want to delete this item?"):
+            success, message = self.inventory_manager.delete_item(user_data[0])
+
+            if not success:
+                messagebox.showerror("Error", message)
+            else:
+                messagebox.showinfo("Success", "Item successfully deleted")
+                self.refresh_items()

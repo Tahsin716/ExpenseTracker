@@ -91,3 +91,13 @@ class InventoryManager:
 
     def get_all_inventory_items(self) -> list[InventoryItem]:
         return self.inventory_repository.get_all_inventory_items()
+
+    def delete_item(self, item_id: str) -> Tuple[bool, str]:
+        try:
+            item_id = int(item_id)
+            self.inventory_repository.delete_item(item_id)
+            return True, ""
+
+        except Exception as e:
+            logging.error(f"Error during user delete: {str(e)}")
+            return False, str(e)
