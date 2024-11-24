@@ -23,7 +23,7 @@ class UserRepository(DataAccess):
             )
             self.session.add(user)
             self.session.commit()
-            return user
+            return self.session.query(User).filter_by(email=email).first()
         except Exception as e:
             self.session.rollback()
             raise e

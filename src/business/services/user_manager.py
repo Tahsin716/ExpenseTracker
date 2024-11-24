@@ -45,7 +45,9 @@ class UserManager:
             hashed_password = PasswordManager.hash_password(password)
             user = self.user_repository.create_user(first_name, last_name, hashed_password, email, is_admin)
 
-            SecurityContext.current_user = user
+            if SecurityContext.current_user is None:
+                SecurityContext.current_user = user
+
             return True, "", user
 
         except SecurityException as e:

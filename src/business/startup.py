@@ -1,4 +1,4 @@
-from src.data_access.seed_data import SeedData
+from src.data_access.seed_data.seed_data import SeedData
 
 
 class Startup:

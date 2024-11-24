@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
-
 from sqlalchemy import select
-
 from src.business.providers.roles import Roles
 from src.business.providers.security_context import SecurityContext
 from src.business.utils.password_manager import PasswordManager
@@ -21,14 +19,21 @@ class SeedData(DataAccess):
         super().__init__()
 
     def seed_data(self):
-        self.category_seed()
-        self.customer_seed()
-        self.inventory_seed()
-        self.user_seed()
-        self.sale_seed()
-        self.sale_item_seed()
-        self.expense_seed()
-        self.session.commit()
+        try:
+            self.category_seed()
+            self.customer_seed()
+            self.inventory_seed()
+            self.user_seed()
+            self.sale_seed()
+            self.sale_item_seed()
+            self.expense_seed()
+            self.session.commit()
+            print("Seeding completed successfully.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"An error occurred during seeding: {e}")
+        finally:
+            self.session.close()
 
     def expense_seed(self):
         expenses = [
@@ -48,7 +53,8 @@ class SeedData(DataAccess):
         for expense in expenses:
             exists = self.session.execute(
                 select(Expense).where(
-                    (Expense.category_id == expense.category_id) & (Expense.date == expense.date)
+                    (Expense.category_id == expense.category_id) &
+                    (Expense.date == expense.date)
                 )
             ).scalar_one_or_none()
             if not exists:
@@ -109,7 +115,7 @@ class SeedData(DataAccess):
                  email="jane.smith@example.com", role=Roles.USER)
         ]
         for user in users:
-            exists = self.session.execute(select(User).where(User.email == user.email)).scalar()
+            exists = self.session.execute(select(User).where(User.email == user.email)).scalar_one_or_none()
             if not exists:
                 self.session.add(user)
 
@@ -119,7 +125,7 @@ class SeedData(DataAccess):
             InventoryItem(name="Chair", description="Office Chair", quantity=15, cost_price=50, selling_price=100),
         ]
         for item in inventory_items:
-            exists = self.session.execute(select(InventoryItem).where(InventoryItem.name == item.name)).scalar()
+            exists = self.session.execute(select(InventoryItem).where(InventoryItem.name == item.name)).scalar_one_or_none()
             if not exists:
                 self.session.add(item)
 
@@ -130,7 +136,8 @@ class SeedData(DataAccess):
         ]
         for customer in customers:
             exists = self.session.execute(
-                select(Customer).where(Customer.phone_number == customer.phone_number)).scalar()
+                select(Customer).where(Customer.phone_number == customer.phone_number)
+            ).scalar_one_or_none()
             if not exists:
                 self.session.add(customer)
 
@@ -140,7 +147,6 @@ class SeedData(DataAccess):
             Category(name="Travel", description="Travel-related expenses")
         ]
         for category in categories:
-            exists = self.session.execute(select(Category).where(Category.name == category.name)).scalar()
+            exists = self.session.execute(select(Category).where(Category.name == category.name)).scalar_one_or_none()
             if not exists:
                 self.session.add(category)
-
