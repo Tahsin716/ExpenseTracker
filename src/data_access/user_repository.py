@@ -1,9 +1,6 @@
-import logging
 import datetime
-from tkinter.ttk import Treeview
 
 from typing_extensions import Tuple
-from sqlalchemy import Select
 
 from src.business.providers.roles import Roles
 from src.data_access.data_access import DataAccess

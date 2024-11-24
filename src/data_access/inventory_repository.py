@@ -1,4 +1,4 @@
-import logging
+
 
 from src.data_access.data_access import DataAccess
 from src.data_access.models.inventory_item import InventoryItem

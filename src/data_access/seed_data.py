@@ -8,11 +8,11 @@ from src.business.utils.password_manager import PasswordManager
 from src.data_access.data_access import DataAccess
 from src.data_access.models.category import Category
 from src.data_access.models.customer import Customer
-from src.data_access.models.inventory_item import InventoryItem
-from src.data_access.models.user import User
 from src.data_access.models.expense import Expense
+from src.data_access.models.inventory_item import InventoryItem
 from src.data_access.models.sale import Sale
 from src.data_access.models.sale_item import SaleItem
+from src.data_access.models.user import User
 
 
 class SeedData(DataAccess):

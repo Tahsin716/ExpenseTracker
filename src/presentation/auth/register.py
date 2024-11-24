@@ -1,5 +1,5 @@
-from tkinter import ttk, messagebox
 import tkinter as tk
+from tkinter import ttk, messagebox
 
 from src.business.services.user_manager import UserManager
 
