@@ -101,3 +101,9 @@ class InventoryManager:
         except Exception as e:
             logging.error(f"Error during user delete: {str(e)}")
             return False, str(e)
+
+    def search_item_by_name(self, search_text) -> list[InventoryItem]:
+        return self.inventory_repository.search_items_by_name(search_text)
+
+    def get_item_by_id(self, item_id : int) -> InventoryItem:
+        return self.inventory_repository.get_item_by_id(item_id)

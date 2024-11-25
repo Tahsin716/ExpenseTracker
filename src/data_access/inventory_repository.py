@@ -46,7 +46,7 @@ class InventoryRepository(DataAccess):
     def get_all_inventory_items(self) -> list[InventoryItem]:
         return self.session.query(InventoryItem).all()
 
-    def get_item_by_id(self, item_id : str) -> InventoryItem:
+    def get_item_by_id(self, item_id : int) -> InventoryItem:
         return self.session.query(InventoryItem).filter_by(item_id=item_id).first()
 
     def update_quantity(self, item_id : str, quantity_change : int) -> InventoryItem:
@@ -58,3 +58,8 @@ class InventoryRepository(DataAccess):
         except Exception as e:
             self.session.rollback()
             raise e
+
+    def search_items_by_name(self, search_text):
+        return self.session.query(InventoryItem).filter(
+            InventoryItem.name.ilike(f"%{search_text}%")
+        ).all()

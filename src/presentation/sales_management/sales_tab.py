@@ -1,6 +1,9 @@
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
+from src.business.services.inventory_manager import InventoryManager
 from src.business.services.user_manager import UserManager
+from src.data_access.models.inventory_item import InventoryItem
+from src.presentation.sales_management.add_item_dialog import AddItemDialog
 from src.presentation.sales_management.search_dropdown import SearchDropdown
 
 
@@ -8,6 +11,7 @@ class SalesTab(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.user_manager = UserManager()
+        self.inventory_manager = InventoryManager()
 
         # Customer search section
         customer_frame = ttk.LabelFrame(self, text="Customer Information")
@@ -46,17 +50,17 @@ class SalesTab(ttk.Frame):
         button_frame = ttk.Frame(self)
         button_frame.pack(fill='x', padx=5, pady=5)
 
-        # ttk.Button(
-        #     button_frame,
-        #     text="Add Item",
-        #     command=self.show_add_item_dialog
-        # ).pack(side='left', padx=5)
-        #
-        # ttk.Button(
-        #     button_frame,
-        #     text="Remove Selected",
-        #     command=self.remove_selected_item
-        # ).pack(side='left', padx=5)
+        ttk.Button(
+            button_frame,
+            text="Add Item",
+            command=self.show_add_item_dialog
+        ).pack(side='left', padx=5)
+
+        ttk.Button(
+            button_frame,
+            text="Remove Selected",
+            command=self.remove_selected_item
+        ).pack(side='left', padx=5)
 
         # Total and complete sale frame
         total_frame = ttk.Frame(self)
@@ -64,7 +68,7 @@ class SalesTab(ttk.Frame):
 
         self.total_label = ttk.Label(
             total_frame,
-            text="Total: $0.00",
+            text="Total: £0.00",
             font=('TkDefaultFont', 12, 'bold')
         )
         self.total_label.pack(side='left', padx=5)
@@ -78,81 +82,96 @@ class SalesTab(ttk.Frame):
         # Initialize sale items dictionary
         self.sale_items = {}
 
-    def search_customers(self, phone_number):
+    def search_customers(self, phone_number : str) -> list[str]:
         customers = self.user_manager.search_customer_by_phone_number(phone_number)
         return [customer.phone_number for customer in customers]
 
-    # def show_add_item_dialog(self):
-    #     AddItemDialog(self, self.search_items, self.add_item)
+    def search_items(self, search_text : str):
+        items = self.inventory_manager.search_item_by_name(search_text)
+        return [f"{item.name} (ID: {item.item_id}, Stock: {item.quantity})" for item in items]
 
-    # def add_item(self, item, quantity):
-    #     item_id = item.item_id
-    #
-    #     if item_id in self.sale_items:
-    #         # Merge quantities if item already exists
-    #         existing_qty = self.sale_items[item_id]['quantity']
-    #         new_qty = existing_qty + quantity
-    #
-    #         if new_qty > item.quantity:
-    #             messagebox.showerror(
-    #                 "Error",
-    #                 f"Not enough stock. Available: {item.quantity}"
-    #             )
-    #             return
-    #
-    #         self.sale_items[item_id]['quantity'] = new_qty
-    #         self.sale_items[item_id]['total'] = new_qty * item.selling_price
-    #
-    #         # Update existing tree item
-    #         for child in self.tree.get_children():
-    #             if self.tree.item(child)['values'][0] == item_id:
-    #                 self.tree.item(
-    #                     child,
-    #                     values=(
-    #                         item_id,
-    #                         item.name,
-    #                         new_qty,
-    #                         f"${item.selling_price:.2f}",
-    #                         f"${new_qty * item.selling_price:.2f}"
-    #                     )
-    #                 )
-    #                 break
-    #     else:
-    #         # Add new item
-    #         self.sale_items[item_id] = {
-    #             'item': item,
-    #             'quantity': quantity,
-    #             'total': quantity * item.selling_price
-    #         }
-    #
-    #         self.tree.insert(
-    #             '',
-    #             'end',
-    #             values=(
-    #                 item_id,
-    #                 item.name,
-    #                 quantity,
-    #                 f"${item.selling_price:.2f}",
-    #                 f"${quantity * item.selling_price:.2f}"
-    #             )
-    #         )
-    #
-    #     self.update_total()
-    #
-    # def remove_selected_item(self):
-    #     selected = self.tree.selection()
-    #     if not selected:
-    #         return
-    #
-    #     item_id = self.tree.item(selected[0])['values'][0]
-    #     del self.sale_items[item_id]
-    #     self.tree.delete(selected[0])
-    #     self.update_total()
-    #
-    # def update_total(self):
-    #     total = sum(item['total'] for item in self.sale_items.values())
-    #     self.total_label.configure(text=f"Total: ${total:.2f}")
-    #
+    def get_item(self, item_id: int) -> InventoryItem:
+        return self.inventory_manager.get_item_by_id(item_id)
+
+    def show_add_item_dialog(self):
+        AddItemDialog(self, self.search_items, self.add_item, self.get_item)
+
+    def add_item(self, item, quantity):
+        item_id = item.item_id
+
+        if item_id in self.sale_items:
+            # Merge quantities if item already exists
+            existing_qty = self.sale_items[item_id]['quantity']
+            new_qty = existing_qty + quantity
+
+            if new_qty > item.quantity:
+                messagebox.showerror(
+                    "Error",
+                    f"Not enough stock. Available: {item.quantity}"
+                )
+                return
+
+            self.sale_items[item_id]['quantity'] = new_qty
+            self.sale_items[item_id]['total'] = new_qty * item.selling_price
+
+            # Update existing tree item
+            for child in self.tree.get_children():
+                if self.tree.item(child)['values'][0] == item_id:
+                    self.tree.item(
+                        child,
+                        values=(
+                            item_id,
+                            item.name,
+                            new_qty,
+                            f"£{item.selling_price:.2f}",
+                            f"£{new_qty * item.selling_price:.2f}"
+                        )
+                    )
+                    break
+        else:
+            # Add new item
+            self.sale_items[item_id] = {
+                'item': item,
+                'quantity': quantity,
+                'total': quantity * item.selling_price
+            }
+
+            self.tree.insert(
+                '',
+                'end',
+                values=(
+                    item_id,
+                    item.name,
+                    quantity,
+                    f"£{item.selling_price:.2f}",
+                    f"£{quantity * item.selling_price:.2f}"
+                )
+            )
+
+        self.update_total()
+
+    def remove_selected_item(self):
+        selected = self.tree.selection()
+        if not selected:
+            return
+
+        item_id = self.tree.item(selected[0])['values'][0]
+        del self.sale_items[item_id]
+        self.tree.delete(selected[0])
+        self.update_total()
+
+    def remove_all_items(self):
+        self.sale_items = {}
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        self.update_total()
+
+    def update_total(self):
+        total = sum(item['total'] for item in self.sale_items.values())
+        self.total_label.configure(text=f"Total: £{total:.2f}")
+
     # def complete_sale(self):
     #     if not self.sale_items:
     #         messagebox.showwarning("Warning", "No items in sale")

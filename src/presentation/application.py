@@ -30,8 +30,12 @@ class Application:
 
         if page_name == "MainPage":
             user_management_tab = frame.tabs["Users"]
+            sales_tab = frame.tabs["Sales"]
             if user_management_tab:
                 user_management_tab.refresh_users()
+
+            if sales_tab:
+                sales_tab.remove_all_items()
 
         frame.tkraise()
 
