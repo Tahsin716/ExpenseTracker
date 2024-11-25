@@ -6,6 +6,7 @@ from src.business.providers.roles import Roles
 from src.business.providers.security_context import SecurityContext
 from src.business.utils.password_manager import PasswordManager
 from src.business.utils.validation import Validation
+from src.data_access.models.customer import Customer
 from src.data_access.models.user import User
 from src.data_access.user_repository import UserRepository
 
@@ -115,3 +116,6 @@ class UserManager:
         except Exception as e:
             logging.error(f"Error during user delete: {str(e)}")
             return False, str(e)
+
+    def search_customer_by_phone_number(self, phone_number: str) -> list[Customer]:
+        return self.user_repository.search_customer_by_phone_number(phone_number)

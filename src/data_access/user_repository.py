@@ -4,6 +4,7 @@ from typing_extensions import Tuple
 
 from src.business.providers.roles import Roles
 from src.data_access.data_access import DataAccess
+from src.data_access.models.customer import Customer
 from src.data_access.models.user import User
 
 
@@ -54,3 +55,9 @@ class UserRepository(DataAccess):
 
     def get_user_by_id(self, user_id : int) -> User:
         return self.session.query(User).filter_by(user_id=user_id).first()
+
+    def search_customer_by_phone_number(self, phone_number: str) -> list[Customer]:
+        return self.session.query(Customer).filter(
+            Customer.phone_number.ilike(f"%{phone_number}%")
+        ).all()
+
