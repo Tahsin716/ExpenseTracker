@@ -3,6 +3,7 @@ from tkinter import ttk
 from src.business.providers.security_context import SecurityContext
 from src.presentation.expense_management.expenses_tab import ExpensesTab
 from src.presentation.inventory_management.inventory_management_tab import InventoryManagementTab
+from src.presentation.report_management.report_tab import ReportingTab
 from src.presentation.sales_management.sales_tab import SalesTab
 from src.presentation.sales_tracking.sales_tracking_tab import SalesTrackingTab
 from src.presentation.user_management.user_management_tab import UserManagementTab
@@ -20,7 +21,8 @@ class MainPage(ttk.Frame):
             "Expenses": ExpensesTab(self.notebook),
             "Inventory": InventoryManagementTab(self.notebook),
             "Sales": SalesTab(self.notebook),
-            "Sales Tracking": SalesTrackingTab(self.notebook)
+            "Sales Tracking": SalesTrackingTab(self.notebook),
+            "Reporting" : ReportingTab(self.notebook)
         }
 
         for tab_name, tab_instance in self.tabs.items():

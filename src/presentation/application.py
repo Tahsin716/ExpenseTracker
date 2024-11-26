@@ -35,6 +35,7 @@ class Application:
             user_management_tab = frame.tabs["Users"]
             sales_tab = frame.tabs["Sales"]
             sales_tracking_tab = frame.tabs["Sales Tracking"]
+            reporting_tab = frame.tabs["Reporting"]
 
             if user_management_tab:
                 user_management_tab.refresh_data()
@@ -44,6 +45,9 @@ class Application:
 
             if sales_tracking_tab and SecurityContext.current_user is not None:
                 sales_tracking_tab.display()
+
+            if reporting_tab and SecurityContext.current_user is not None:
+                reporting_tab.display()
 
 
         frame.tkraise()
