@@ -33,7 +33,7 @@ class Application:
             sales_tab = frame.tabs["Sales"]
 
             if user_management_tab:
-                user_management_tab.refresh_users()
+                user_management_tab.refresh_data()
 
             if sales_tab:
                 sales_tab.reset_all_data()

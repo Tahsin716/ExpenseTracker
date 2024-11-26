@@ -14,21 +14,36 @@ class MainPage(ttk.Frame):
 
         self.notebook = ttk.Notebook(self)
 
+        # Create tabs as before
         self.tabs = {
             "Users": UserManagementTab(self.notebook),
             "Expenses": ExpensesTab(self.notebook),
             "Inventory": InventoryManagementTab(self.notebook),
             "Sales": SalesTab(self.notebook),
-            # "Sales Tracking": SalesTrackingTab(self.notebook),
-            # "Reporting": ReportingTab(self.notebook)
         }
 
         for tab_name, tab_instance in self.tabs.items():
             self.notebook.add(tab_instance, text=tab_name)
 
+        # Bind tab change event
+        self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_changed)
+
         self.notebook.pack(expand=True, fill='both')
 
         ttk.Button(self, text="Logout", command=self.logout).pack()
+
+    def on_tab_changed(self, event):
+        # Get the currently selected tab
+        current_tab_index = self.notebook.index(self.notebook.select())
+        current_tab_name = self.notebook.tab(current_tab_index, "text")
+
+        # Call refresh method for the current tab
+        if current_tab_name in self.tabs:
+            current_tab = self.tabs[current_tab_name]
+
+            # Check if the tab has a refresh method
+            if hasattr(current_tab, 'refresh_data'):
+                current_tab.refresh_data()
 
     def logout(self):
         SecurityContext.current_user = None

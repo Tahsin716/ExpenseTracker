@@ -35,9 +35,9 @@ class ExpensesTab(ttk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.refresh_expenses()
+        self.refresh_data()
 
-    def refresh_expenses(self):
+    def refresh_data(self):
         expenses = self.expense_manager.get_all_expense()
 
         for item in self.tree.get_children():
@@ -49,7 +49,7 @@ class ExpensesTab(ttk.Frame):
                                                 expense.date.strftime('%Y-%m-%d')))
 
     def create_expense(self):
-        CreateExpenseForm(self, self.refresh_expenses)
+        CreateExpenseForm(self, self.refresh_data)
 
     def create_category(self):
         CreateCategoryForm(self)

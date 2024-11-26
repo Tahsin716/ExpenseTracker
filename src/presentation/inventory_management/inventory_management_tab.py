@@ -35,9 +35,9 @@ class InventoryManagementTab(ttk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.refresh_items()
+        self.refresh_data()
 
-    def refresh_items(self):
+    def refresh_data(self):
         items = self.inventory_manager.get_all_inventory_items()
 
         for item in self.tree.get_children():
@@ -48,7 +48,7 @@ class InventoryManagementTab(ttk.Frame):
 
 
     def create_inventory_item(self):
-        CreateInventoryForm(self, self.refresh_items)
+        CreateInventoryForm(self, self.refresh_data)
 
     def update_inventory_item(self):
         selected_item = self.tree.selection()
@@ -58,7 +58,7 @@ class InventoryManagementTab(ttk.Frame):
             return
 
         user_data = self.tree.item(selected_item[0], 'values')
-        UpdateInventoryForm(self, user_data, self.refresh_items)
+        UpdateInventoryForm(self, user_data, self.refresh_data)
 
     def delete_inventory_item(self):
         selected_item = self.tree.selection()
@@ -75,4 +75,4 @@ class InventoryManagementTab(ttk.Frame):
                 messagebox.showerror("Error", message)
             else:
                 messagebox.showinfo("Success", "Item successfully deleted")
-                self.refresh_items()
+                self.refresh_data()

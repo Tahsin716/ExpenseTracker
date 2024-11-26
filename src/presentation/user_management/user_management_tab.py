@@ -34,9 +34,9 @@ class UserManagementTab(ttk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.refresh_users()
+        self.refresh_data()
 
-    def refresh_users(self):
+    def refresh_data(self):
         users = self.user_manager.get_all_users()
 
         for item in self.tree.get_children():
@@ -47,7 +47,7 @@ class UserManagementTab(ttk.Frame):
 
 
     def create_user(self):
-        CreateUserForm(self, self.refresh_users)
+        CreateUserForm(self, self.refresh_data)
 
     def update_user(self):
         selected_item = self.tree.selection()
@@ -57,7 +57,7 @@ class UserManagementTab(ttk.Frame):
             return
 
         user_data = self.tree.item(selected_item[0], 'values')
-        UpdateUserForm(self, user_data, self.refresh_users)
+        UpdateUserForm(self, user_data, self.refresh_data)
 
     def delete_user(self):
         selected_item = self.tree.selection()
@@ -75,4 +75,4 @@ class UserManagementTab(ttk.Frame):
                 messagebox.showerror("Error", message)
             else:
                 messagebox.showinfo("Success", "User successfully deleted")
-                self.refresh_users()
+                self.refresh_data()
