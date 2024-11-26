@@ -1,6 +1,8 @@
 from tkinter import ttk, messagebox
 
+from src.business.services.customer_manager import CustomerManager
 from src.business.services.inventory_manager import InventoryManager
+from src.business.services.sale_manager import SaleManager
 from src.business.services.user_manager import UserManager
 from src.data_access.models.inventory_item import InventoryItem
 from src.presentation.sales_management.add_item_dialog import AddItemDialog
@@ -12,6 +14,8 @@ class SalesTab(ttk.Frame):
         super().__init__(parent)
         self.user_manager = UserManager()
         self.inventory_manager = InventoryManager()
+        self.customer_manager = CustomerManager()
+        self.sale_manager = SaleManager()
 
         # Customer search section
         customer_frame = ttk.LabelFrame(self, text="Customer Information")
@@ -62,7 +66,6 @@ class SalesTab(ttk.Frame):
             command=self.remove_selected_item
         ).pack(side='left', padx=5)
 
-        # Total and complete sale frame
         total_frame = ttk.Frame(self)
         total_frame.pack(fill='x', padx=5, pady=5)
 
@@ -73,14 +76,14 @@ class SalesTab(ttk.Frame):
         )
         self.total_label.pack(side='left', padx=5)
 
-        # ttk.Button(
-        #     total_frame,
-        #     text="Complete Sale",
-        #     command=self.complete_sale
-        # ).pack(side='right', padx=5)
+        ttk.Button(
+            total_frame,
+            text="Complete Sale",
+            command=self.complete_sale
+        ).pack(side='right', padx=5)
 
-        # Initialize sale items dictionary
         self.sale_items = {}
+        self.inventory_items : list[InventoryItem] = []
 
     def search_customers(self, phone_number : str) -> list[str]:
         customers = self.user_manager.search_customer_by_phone_number(phone_number)
@@ -96,11 +99,10 @@ class SalesTab(ttk.Frame):
     def show_add_item_dialog(self):
         AddItemDialog(self, self.search_items, self.add_item, self.get_item)
 
-    def add_item(self, item, quantity):
+    def add_item(self, item : InventoryItem, quantity : int):
         item_id = item.item_id
 
         if item_id in self.sale_items:
-            # Merge quantities if item already exists
             existing_qty = self.sale_items[item_id]['quantity']
             new_qty = existing_qty + quantity
 
@@ -114,7 +116,6 @@ class SalesTab(ttk.Frame):
             self.sale_items[item_id]['quantity'] = new_qty
             self.sale_items[item_id]['total'] = new_qty * item.selling_price
 
-            # Update existing tree item
             for child in self.tree.get_children():
                 if self.tree.item(child)['values'][0] == item_id:
                     self.tree.item(
@@ -129,7 +130,6 @@ class SalesTab(ttk.Frame):
                     )
                     break
         else:
-            # Add new item
             self.sale_items[item_id] = {
                 'item': item,
                 'quantity': quantity,
@@ -148,6 +148,8 @@ class SalesTab(ttk.Frame):
                 )
             )
 
+            self.inventory_items.append(item)
+
         self.update_total()
 
     def remove_selected_item(self):
@@ -157,76 +159,52 @@ class SalesTab(ttk.Frame):
 
         item_id = self.tree.item(selected[0])['values'][0]
         del self.sale_items[item_id]
+        self.inventory_items = [item for item in self.inventory_items if item.item_id != item_id]
         self.tree.delete(selected[0])
         self.update_total()
 
-    def remove_all_items(self):
-        self.sale_items = {}
+    def reset_all_data(self):
+        self.sale_items.clear()
+        self.inventory_items.clear()
 
         for item in self.tree.get_children():
             self.tree.delete(item)
 
+        self.customer_search.clear()
         self.update_total()
 
     def update_total(self):
         total = sum(item['total'] for item in self.sale_items.values())
         self.total_label.configure(text=f"Total: £{total:.2f}")
 
-    # def complete_sale(self):
-    #     if not self.sale_items:
-    #         messagebox.showwarning("Warning", "No items in sale")
-    #         return
-    #
-    #     phone_number = self.customer_search.get()
-    #
-    #     # Create or get customer
-    #     if phone_number:
-    #         customer = self.session.query(Customer).filter_by(
-    #             phone_number=phone_number
-    #         ).first()
-    #
-    #         if not customer:
-    #             customer = Customer(phone_number=phone_number)
-    #             self.session.add(customer)
-    #
-    #     try:
-    #         # Create sale
-    #         total_amount = sum(item['total'] for item in self.sale_items.values())
-    #
-    #         sale = Sale(
-    #             total_amount=total_amount,
-    #             customer_phone_number=phone_number if phone_number else None
-    #         )
-    #         self.session.add(sale)
-    #
-    #         # Add sale items and update inventory
-    #         for item_id, sale_item in self.sale_items.items():
-    #             item = sale_item['item']
-    #             quantity = sale_item['quantity']
-    #
-    #             # Create sale item
-    #             new_sale_item = SaleItem(
-    #                 sale=sale,
-    #                 inventory_item_id=item_id,
-    #                 quantity=quantity,
-    #                 price_per_unit=item.selling_price
-    #             )
-    #             self.session.add(new_sale_item)
-    #
-    #             # Update inventory quantity
-    #             item.quantity -= quantity
-    #
-    #         self.session.commit()
-    #         messagebox.showinfo("Success", "Sale completed successfully!")
-    #
-    #         # Clear form
-    #         self.sale_items.clear()
-    #         for item in self.tree.get_children():
-    #             self.tree.delete(item)
-    #         self.customer_search.clear()
-    #         self.update_total()
-    #
-    #     except Exception as e:
-    #         self.session.rollback()
-    #         messagebox.showerror("Error", f"Failed to complete sale: {str(e)}")
+    def complete_sale(self):
+        if not self.sale_items:
+            messagebox.showwarning("Warning", "No items in sale")
+            return
+
+        phone_number = self.customer_search.get()
+        customer = None
+
+        if not phone_number or len(phone_number) == 0:
+            messagebox.showwarning("Warning", "Customer phone number required")
+            return
+
+        if phone_number:
+            customer = self.customer_manager.get_customer_by_phone_number(phone_number)
+
+            if not customer:
+                success, message, customer = self.customer_manager.create_customer(phone_number)
+
+                if not success:
+                    messagebox.showerror("Error", message)
+                    return
+
+        success, message, sale = self.sale_manager.create_sale(customer, self.inventory_items)
+
+        if not success:
+            messagebox.showerror("Error", message)
+            return
+
+        messagebox.showinfo("Success", "Sale completed successfully!")
+        self.reset_all_data()
 

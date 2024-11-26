@@ -35,7 +35,7 @@ class Application:
                 user_management_tab.refresh_users()
 
             if sales_tab:
-                sales_tab.remove_all_items()
+                sales_tab.reset_all_data()
 
         frame.tkraise()
 

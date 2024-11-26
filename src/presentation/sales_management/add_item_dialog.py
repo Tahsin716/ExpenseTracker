@@ -57,6 +57,16 @@ class AddItemDialog(tk.Toplevel):
             self.focus()
             return
 
+        if quantity <= 0:
+            messagebox.showerror(
+                "Error",
+                f"Quantity cannot be negative or 0"
+            )
+            self.focus()
+            return
+
+        item.quantity = quantity
+
         self.add_callback(item, quantity)
         self.destroy()
 
