@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+from sqlalchemy.sql.functions import current_user
+
+from src.business.providers.security_context import SecurityContext
 from src.presentation.auth.login import Login
 from src.presentation.auth.register import Register
 from src.presentation.main_page import MainPage
@@ -31,12 +34,17 @@ class Application:
         if page_name == "MainPage":
             user_management_tab = frame.tabs["Users"]
             sales_tab = frame.tabs["Sales"]
+            sales_tracking_tab = frame.tabs["Sales Tracking"]
 
             if user_management_tab:
                 user_management_tab.refresh_data()
 
             if sales_tab:
                 sales_tab.reset_all_data()
+
+            if sales_tracking_tab and SecurityContext.current_user is not None:
+                sales_tracking_tab.display()
+
 
         frame.tkraise()
 

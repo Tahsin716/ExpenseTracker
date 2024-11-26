@@ -60,6 +60,7 @@ class InventoryRepository(DataAccess):
             raise e
 
     def search_items_by_name(self, search_text):
+        self.session.expire_all()
         return self.session.query(InventoryItem).filter(
             InventoryItem.name.ilike(f"%{search_text}%")
         ).all()

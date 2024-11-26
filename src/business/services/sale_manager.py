@@ -40,3 +40,6 @@ class SaleManager:
             logging.error(f"Error occurred while saving sale: {str(e)}")
             return False, str(e), Sale()
 
+    def get_all_sales(self) -> list[Sale]:
+        return self.sales_repository.get_all_sales()
+
