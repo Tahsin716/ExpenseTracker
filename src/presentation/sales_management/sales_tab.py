@@ -17,7 +17,6 @@ class SalesTab(ttk.Frame):
         self.customer_manager = CustomerManager()
         self.sale_manager = SaleManager()
 
-        # Customer search section
         customer_frame = ttk.LabelFrame(self, text="Customer Information")
         customer_frame.pack(fill='x', padx=5, pady=5)
 
@@ -29,7 +28,6 @@ class SalesTab(ttk.Frame):
         )
         self.customer_search.pack(side='left', padx=5)
 
-        # Create treeview for selected items
         self.tree = ttk.Treeview(
             self,
             columns=('ID', 'Name', 'Quantity', 'Price', 'Total'),
@@ -50,7 +48,6 @@ class SalesTab(ttk.Frame):
 
         self.tree.pack(expand=True, fill='both', padx=5, pady=5)
 
-        # Buttons frame
         button_frame = ttk.Frame(self)
         button_frame.pack(fill='x', padx=5, pady=5)
 
