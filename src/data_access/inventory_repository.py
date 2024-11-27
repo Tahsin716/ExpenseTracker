@@ -44,6 +44,7 @@ class InventoryRepository(DataAccess):
             raise e
 
     def get_all_inventory_items(self) -> list[InventoryItem]:
+        self.session.expire_all()
         return self.session.query(InventoryItem).all()
 
     def get_item_by_id(self, item_id : int) -> InventoryItem:

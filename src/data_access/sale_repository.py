@@ -12,19 +12,20 @@ class SaleRepository(DataAccess):
         super().__init__()
         self.inventory_repository = InventoryRepository()
 
-    def create_sale(self, customer : Customer, items: list[InventoryItem]) -> Sale:
+    def create_sale(self, customer : Customer, items : dict) -> Sale:
         try:
-            total_amount = sum(item.quantity * item.selling_price for item in items)
+            total_amount = sum(item['total'] for item in items.values())
             sale = Sale(customer_id=customer.customer_id, total_amount=total_amount)
+
             self.session.add(sale)
             self.session.flush()
 
-            for item in items:
+            for item in items.values():
                 sale_item = SaleItem(
                     sale_id=sale.sale_id,
-                    inventory_item_id=item.item_id,
-                    quantity=item.quantity,
-                    price_per_unit=item.selling_price
+                    inventory_item_id=item['item_id'],
+                    quantity=item['quantity'],
+                    price_per_unit=item['selling_price']
                 )
                 self.session.add(sale_item)
 

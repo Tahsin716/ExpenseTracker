@@ -80,7 +80,6 @@ class SalesTab(ttk.Frame):
         ).pack(side='right', padx=5)
 
         self.sale_items = {}
-        self.inventory_items : list[InventoryItem] = []
 
     def search_customers(self, phone_number : str) -> list[str]:
         customers = self.user_manager.search_customer_by_phone_number(phone_number)
@@ -110,8 +109,10 @@ class SalesTab(ttk.Frame):
                 )
                 return
 
-            self.sale_items[item_id]['quantity'] = new_qty
-            self.sale_items[item_id]['total'] = new_qty * item.selling_price
+            self.sale_items[item_id]['item_id'] = item_id
+            self.sale_items[item_id]['quantity'] : int = new_qty
+            self.sale_items[item_id]['selling_price'] : float = item.selling_price
+            self.sale_items[item_id]['total'] : float = new_qty * item.selling_price
 
             for child in self.tree.get_children():
                 if self.tree.item(child)['values'][0] == item_id:
@@ -128,8 +129,9 @@ class SalesTab(ttk.Frame):
                     break
         else:
             self.sale_items[item_id] = {
-                'item': item,
+                'item_id' : item_id,
                 'quantity': quantity,
+                'selling_price': item.selling_price,
                 'total': quantity * item.selling_price
             }
 
@@ -145,8 +147,6 @@ class SalesTab(ttk.Frame):
                 )
             )
 
-            self.inventory_items.append(item)
-
         self.update_total()
 
     def remove_selected_item(self):
@@ -156,13 +156,11 @@ class SalesTab(ttk.Frame):
 
         item_id = self.tree.item(selected[0])['values'][0]
         del self.sale_items[item_id]
-        self.inventory_items = [item for item in self.inventory_items if item.item_id != item_id]
         self.tree.delete(selected[0])
         self.update_total()
 
     def reset_all_data(self):
         self.sale_items.clear()
-        self.inventory_items.clear()
 
         for item in self.tree.get_children():
             self.tree.delete(item)
@@ -196,7 +194,7 @@ class SalesTab(ttk.Frame):
                     messagebox.showerror("Error", message)
                     return
 
-        success, message, sale = self.sale_manager.create_sale(customer, self.inventory_items)
+        success, message, sale = self.sale_manager.create_sale(customer, self.sale_items)
 
         if not success:
             messagebox.showerror("Error", message)

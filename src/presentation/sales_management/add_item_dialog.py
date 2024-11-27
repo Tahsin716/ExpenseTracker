@@ -65,8 +65,6 @@ class AddItemDialog(tk.Toplevel):
             self.focus()
             return
 
-        item.quantity = quantity
-
         self.add_callback(item, quantity)
         self.destroy()
 

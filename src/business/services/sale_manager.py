@@ -14,23 +14,18 @@ class SaleManager:
         self.sales_repository = SaleRepository()
         self.inventory_repository = InventoryRepository()
 
-    def create_sale(self, customer : Customer, items : list[InventoryItem]) -> Tuple[bool, str, Sale]:
+    def create_sale(self, customer : Customer, sale_items : dict ) -> Tuple[bool, str, Sale]:
         try:
             if not Customer:
                 raise SecurityException("Customer cannot be empty")
 
-            if not items or items.count == 0:
+            if not sale_items:
                 raise SecurityException("Items cannot be empty")
 
-            all_inventory_items = all(isinstance(item, InventoryItem) for item in items)
+            sale = self.sales_repository.create_sale(customer, sale_items)
 
-            if not all_inventory_items:
-                raise SecurityException("Some objects are not instance of InventoryItem")
-
-            sale = self.sales_repository.create_sale(customer, items)
-
-            for item in items:
-                self.inventory_repository.update_quantity(item.item_id, -item.quantity)
+            for sale_item in sale_items.values():
+                self.inventory_repository.update_quantity(sale_item['item_id'], -sale_item['quantity'])
 
             return True, "", sale
         except SecurityException as e:
