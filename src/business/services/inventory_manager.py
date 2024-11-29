@@ -1,5 +1,5 @@
 import logging
-from typing import Tuple
+from typing import Tuple, Dict
 
 from src.business.exception.security_exception import SecurityException
 from src.business.utils.validation import Validation
@@ -107,3 +107,56 @@ class InventoryManager:
 
     def get_item_by_id(self, item_id : int) -> InventoryItem:
         return self.inventory_repository.get_item_by_id(item_id)
+
+    def generate_inventory_report(self) -> Dict:
+        try:
+            inventory_items = self.get_all_inventory_items()
+
+            if not inventory_items:
+                return {
+                    "total_items": 0,
+                    "max_quantity_item": None,
+                    "min_quantity_item": None,
+                    "max_selling_price_item": None,
+                    "min_selling_price_item": None
+                }
+
+            total_items = len(inventory_items)
+
+            max_quantity_item = max(inventory_items, key=lambda x: x.quantity)
+            min_quantity_item = min(inventory_items, key=lambda x: x.quantity)
+
+            max_selling_price_item = max(inventory_items, key=lambda x: x.selling_price)
+            min_selling_price_item = min(inventory_items, key=lambda x: x.selling_price)
+
+            return {
+                "total_items": total_items,
+                "max_quantity_item": {
+                    "name": max_quantity_item.name,
+                    "quantity": max_quantity_item.quantity,
+                    "description": max_quantity_item.description,
+                    "selling_price": max_quantity_item.selling_price
+                },
+                "min_quantity_item": {
+                    "name": min_quantity_item.name,
+                    "quantity": min_quantity_item.quantity,
+                    "description": min_quantity_item.description,
+                    "selling_price": min_quantity_item.selling_price
+                },
+                "max_selling_price_item": {
+                    "name": max_selling_price_item.name,
+                    "selling_price": max_selling_price_item.selling_price,
+                    "quantity": max_selling_price_item.quantity,
+                    "description": max_selling_price_item.description
+                },
+                "min_selling_price_item": {
+                    "name": min_selling_price_item.name,
+                    "selling_price": min_selling_price_item.selling_price,
+                    "quantity": min_selling_price_item.quantity,
+                    "description": min_selling_price_item.description
+                }
+            }
+
+        except Exception as e:
+            logging.error(f"Error generating inventory report: {str(e)}")
+            raise

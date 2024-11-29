@@ -55,7 +55,7 @@ class ExpenseReportDialog(tk.Toplevel):
                   style='TLabel').pack(anchor='w')
 
         ttk.Separator(main_frame, orient='horizontal').pack(fill='x', pady=10)
-        ttk.Label(main_frame, text="Most Common Category", style='Title.TLabel').pack(anchor='w')
+        ttk.Label(main_frame, text="Most Common Category of Expense", style='Title.TLabel').pack(anchor='w')
         ttk.Label(main_frame,
                   text=f"Category: {report_data['most_common_category_id']}",
                   style='TLabel').pack(anchor='w')
