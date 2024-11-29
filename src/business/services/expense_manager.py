@@ -1,10 +1,8 @@
 import datetime
 import logging
-from typing import Dict, Tuple
-from collections import Counter
+from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
-
 from src.business.utils.validation import Validation
 from src.data_access.category_repository import CategoryRepository
 from src.data_access.expense_repository import ExpenseRepository

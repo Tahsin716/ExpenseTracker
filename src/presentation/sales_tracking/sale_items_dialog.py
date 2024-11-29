@@ -1,6 +1,7 @@
-from tkinter import  ttk
-from src.data_access.models.sale import Sale
 import tkinter as tk
+from tkinter import ttk
+
+from src.data_access.models.sale import Sale
 
 
 class SaleItemsDialog(tk.Toplevel):

@@ -1,6 +1,6 @@
 import logging
-from typing import Dict
 from collections import Counter
+from typing import Dict
 
 from src.business.exception.security_exception import SecurityException
 from src.data_access.category_repository import CategoryRepository

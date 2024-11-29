@@ -1,5 +1,4 @@
 from src.data_access.data_access import DataAccess
-from src.data_access.inventory_repository import InventoryRepository
 from src.data_access.models.customer import Customer
 from src.data_access.models.sale import Sale
 from src.data_access.models.sale_item import SaleItem

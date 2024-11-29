@@ -1,5 +1,5 @@
-from tkinter import ttk, font, messagebox
-import tkinter as tk
+from tkinter import ttk, messagebox
+
 from src.business.providers.security_context import SecurityContext
 from src.business.services.sale_manager import SaleManager
 from src.presentation.sales_tracking.sale_items_dialog import SaleItemsDialog
