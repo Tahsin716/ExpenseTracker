@@ -1,8 +1,7 @@
 from tkinter import ttk
 
 from src.business.providers.security_context import SecurityContext
-from src.business.services.expense_manager import ExpenseManager
-from src.business.services.inventory_manager import InventoryManager
+from src.business.services.revenue_manager import RevenueManager
 from src.presentation.report_management.expense_report_dialog import ExpenseReportDialog
 from src.presentation.report_management.inventory_report_dialog import InventoryReportDialog
 
@@ -10,8 +9,7 @@ from src.presentation.report_management.inventory_report_dialog import Inventory
 class ReportingTab(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
-        self.expense_manager = ExpenseManager()
-        self.inventory_manager = InventoryManager()
+        self.revenue_manager = RevenueManager()
 
         self.access_message = ttk.Label(self, text="Access Denied! Admin only Access")
         self.action_frame = ttk.Frame(self)
@@ -38,11 +36,11 @@ class ReportingTab(ttk.Frame):
 
 
     def generate_expense_report(self):
-        report_data = self.expense_manager.generate_expense_report()
+        report_data = self.revenue_manager.generate_expense_report()
         ExpenseReportDialog(self, report_data)
 
     def generate_inventory_report(self):
-        report_data = self.inventory_manager.generate_inventory_report()
+        report_data = self.revenue_manager.generate_inventory_report()
         InventoryReportDialog(self, report_data)
 
     def generate_revenue_report(self):
