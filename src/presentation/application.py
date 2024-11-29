@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-from sqlalchemy.sql.functions import current_user
-
 from src.business.providers.security_context import SecurityContext
 from src.presentation.auth.login import Login
 from src.presentation.auth.register import Register

@@ -1,7 +1,4 @@
 import logging
-from typing import Tuple
-
-
 
 from src.data_access.data_access import DataAccess
 from src.data_access.models.customer import Customer

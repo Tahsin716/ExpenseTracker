@@ -4,7 +4,6 @@ from typing import Tuple
 from src.business.exception.security_exception import SecurityException
 from src.data_access.inventory_repository import InventoryRepository
 from src.data_access.models.customer import Customer
-from src.data_access.models.inventory_item import InventoryItem
 from src.data_access.models.sale import Sale
 from src.data_access.sale_repository import SaleRepository
 

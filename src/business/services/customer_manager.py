@@ -2,7 +2,6 @@ import logging
 from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
-from src.business.utils.validation import Validation
 from src.data_access.customer_repository import CustomerRepository
 from src.data_access.models.customer import Customer
 

@@ -1,6 +1,6 @@
+import re
 import tkinter as tk
 from tkinter import ttk, messagebox
-import re
 
 from src.presentation.sales_management.search_dropdown import SearchDropdown
 
