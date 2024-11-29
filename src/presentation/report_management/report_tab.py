@@ -4,6 +4,7 @@ from src.business.providers.security_context import SecurityContext
 from src.business.services.revenue_manager import RevenueManager
 from src.presentation.report_management.expense_report_dialog import ExpenseReportDialog
 from src.presentation.report_management.inventory_report_dialog import InventoryReportDialog
+from src.presentation.report_management.revenue_report_dialog import RevenueReportDialog
 
 
 class ReportingTab(ttk.Frame):
@@ -15,7 +16,7 @@ class ReportingTab(ttk.Frame):
         self.action_frame = ttk.Frame(self)
         self.expense_report_button = ttk.Button(self.action_frame, text="Generate Expense Report", command=self.generate_expense_report)
         self.inventory_report_button = ttk.Button(self.action_frame, text="Generate Inventory Report", command=self.generate_inventory_report)
-        self.revenue_report_button = ttk.Button(self.action_frame, text="Generate Revenue Report", command=self.generate_revenue_report())
+        self.revenue_report_button = ttk.Button(self.action_frame, text="Generate Revenue Report", command=self.generate_revenue_report)
 
         self.display()
 
@@ -44,4 +45,5 @@ class ReportingTab(ttk.Frame):
         InventoryReportDialog(self, report_data)
 
     def generate_revenue_report(self):
-        pass
+        report_data = self.revenue_manager.generate_revenue_report()
+        RevenueReportDialog(self, report_data)

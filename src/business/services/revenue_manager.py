@@ -23,9 +23,9 @@ class RevenueManager:
             if not expenses:
                 return {
                     "total_expenses": 0,
-                    "max_expense": 0,
-                    "min_expense": 0,
-                    "most_common_category": ""
+                    "max_expense": None,
+                    "min_expense": None,
+                    "most_common_category": None
                 }
 
             total_expenses = len(expenses)
@@ -114,4 +114,42 @@ class RevenueManager:
 
         except Exception as e:
             logging.error(f"Error generating inventory report: {str(e)}")
+            raise
+
+    def generate_revenue_report(self) -> Dict:
+        try:
+            sales = self.sale_repository.get_all_sales()
+            inventory_items = self.inventory_repository.get_all_inventory_items()
+            expenses = self.expense_repository.get_all_expenses()
+
+            total_expenses = sum(expense.amount  for expense in expenses)
+            total_sale_items = sum(len(sale.sale_items) for sale in sales)
+
+            total_inventory_cost = sum(item.cost_price * item.quantity for item in inventory_items)
+
+            total_inventory_selling_value = sum(item.selling_price * item.quantity for item in inventory_items)
+
+            total_revenue = sum(sale.total_amount for sale in sales)
+
+            total_cost_of_sold_items = sum(
+                sum(sale_item.quantity * sale_item.item.cost_price for sale_item in sale.sale_items)
+                for sale in sales
+            )
+
+            profit_from_sold_items = total_revenue - total_cost_of_sold_items
+            net_profit = total_revenue - total_inventory_cost - total_expenses
+
+            return {
+                "total_inventory_cost": total_inventory_cost,
+                "total_expenses": total_expenses,
+                "number_of_sales": len(sales),
+                "total_sale_items": total_sale_items,
+                "total_inventory_selling_value": total_inventory_selling_value,
+                "total_revenue": total_revenue,
+                "profit_from_sold_items": profit_from_sold_items,
+                "net_profit": net_profit
+            }
+
+        except Exception as e:
+            logging.error(f"Error generating sales revenue report: {str(e)}")
             raise
