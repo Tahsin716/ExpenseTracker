@@ -25,3 +25,6 @@ class CategoryRepository(DataAccess):
 
     def get_category_by_name(self, name) -> Category:
         return self.session.query(Category).filter_by(name=name).first()
+
+    def get_category_by_id(self, category_id : int) -> Category:
+        return self.session.query(Category).filter_by(category_id=category_id).first()

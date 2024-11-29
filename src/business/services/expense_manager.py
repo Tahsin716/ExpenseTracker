@@ -1,11 +1,12 @@
 import datetime
 import logging
-from typing import Optional, Dict, Tuple
+from typing import Dict, Tuple
+from collections import Counter
 
 from src.business.exception.security_exception import SecurityException
-from src.business.providers.security_context import SecurityContext
-from src.business.utils.common import Common
+
 from src.business.utils.validation import Validation
+from src.data_access.category_repository import CategoryRepository
 from src.data_access.expense_repository import ExpenseRepository
 from src.data_access.models.expense import Expense
 
@@ -14,6 +15,7 @@ class ExpenseManager:
 
     def __init__(self):
         self.expense_repository = ExpenseRepository()
+        self.category_repository = CategoryRepository()
         self.validator = Validation()
 
     def add_expense(self, category_id: int, amount: str,
@@ -51,24 +53,49 @@ class ExpenseManager:
     def get_all_expense(self) -> list[Expense]:
         return self.expense_repository.get_all_expenses()
 
-    def get_expense_summary(self, start_date: Optional[datetime] = None,
-                            end_date: Optional[datetime] = None) -> Dict:
+    def generate_expense_report(self) -> Dict:
         try:
-            if SecurityContext.current_user is None:
-                raise SecurityException("Invalid user")
+            expenses = self.expense_repository.get_all_expenses()
 
-            if start_date is None or end_date is None:
-                start_date, end_date = Common.get_utc_start_and_end_date()
+            if not expenses:
+                return {
+                    "total_expenses": 0,
+                    "max_expense": 0,
+                    "min_expense": 0,
+                    "most_common_category": ""
+                }
 
-            return self.expense_repository.get_user_expenses(
-                SecurityContext.current_user.user_id,
-                start_date,
-                end_date
-            )
+            total_expenses = len(expenses)
+
+            max_expense = max(expenses, key=lambda x: x.amount)
+            min_expense = min(expenses, key=lambda x: x.amount)
+
+            category_counts = Counter(expense.category_id for expense in expenses)
+            most_common_category_id = category_counts.most_common(1)[0][0]
+
+            common_category = self.category_repository.get_category_by_id(most_common_category_id)
+
+
+            return {
+                "total_expenses": total_expenses,
+                "max_expense": {
+                    "amount": max_expense.amount,
+                    "description": max_expense.description,
+                    "date": max_expense.date,
+                    "category": max_expense.category.name
+                },
+                "min_expense": {
+                    "amount": min_expense.amount,
+                    "description": min_expense.description,
+                    "date": min_expense.date,
+                    "category": min_expense.category.name
+                },
+                "most_common_category_id": common_category.name
+            }
 
         except SecurityException as e:
-            logging.error(f"Security error getting expense summary: {str(e)}")
+            logging.error(f"Security error generating expense report: {str(e)}")
             raise
         except Exception as e:
-            logging.error(f"Error getting expense summary: {str(e)}")
+            logging.error(f"Error generating expense report: {str(e)}")
             raise

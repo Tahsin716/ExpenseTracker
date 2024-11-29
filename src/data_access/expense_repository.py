@@ -26,11 +26,3 @@ class ExpenseRepository(DataAccess):
 
     def get_all_expenses(self) -> list[Expense]:
         return self.session.query(Expense).all()
-
-    def get_user_expenses(self, user_id : str, start_date : datetime, end_date : datetime) -> Expense:
-        query = self.session.query(Expense).filter_by(user_id=user_id)
-        if start_date:
-            query = query.filter(Expense.date >= start_date)
-        if end_date:
-            query = query.filter(Expense.date <= end_date)
-        return query.all()
