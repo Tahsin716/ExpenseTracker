@@ -9,7 +9,6 @@ class SaleRepository(DataAccess):
 
     def __init__(self):
         super().__init__()
-        self.inventory_repository = InventoryRepository()
 
     def create_sale(self, customer : Customer, items : dict) -> Sale:
         try:
