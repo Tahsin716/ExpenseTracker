@@ -39,7 +39,6 @@ class SalesTab(ttk.Frame):
         self.tree.heading('Price', text='Price')
         self.tree.heading('Total', text='Total')
 
-        # Column widths
         self.tree.column('ID', width=50)
         self.tree.column('Name', width=200)
         self.tree.column('Quantity', width=100)
@@ -63,6 +62,12 @@ class SalesTab(ttk.Frame):
             command=self.remove_selected_item
         ).pack(side='left', padx=5)
 
+        ttk.Button(
+            button_frame,
+            text="Complete Sale",
+            command=self.complete_sale
+        ).pack(side='left', padx=5)
+
         total_frame = ttk.Frame(self)
         total_frame.pack(fill='x', padx=5, pady=5)
 
@@ -72,12 +77,6 @@ class SalesTab(ttk.Frame):
             font=('TkDefaultFont', 12, 'bold')
         )
         self.total_label.pack(side='left', padx=5)
-
-        ttk.Button(
-            total_frame,
-            text="Complete Sale",
-            command=self.complete_sale
-        ).pack(side='right', padx=5)
 
         self.sale_items = {}
 
@@ -152,6 +151,7 @@ class SalesTab(ttk.Frame):
     def remove_selected_item(self):
         selected = self.tree.selection()
         if not selected:
+            messagebox.showwarning("Warning", "No items in selected")
             return
 
         item_id = self.tree.item(selected[0])['values'][0]
