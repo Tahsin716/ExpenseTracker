@@ -41,7 +41,7 @@ class UserManager:
 
             first_name = self.validator.sanitize_input(first_name)
             last_name = self.validator.sanitize_input(last_name)
-            email = self.validator.sanitize_input(email)
+            email = self.validator.sanitize_input(email).lower()
 
             hashed_password = PasswordManager.hash_password(password)
             user = self.user_repository.create_user(first_name, last_name, hashed_password, email, is_admin)
