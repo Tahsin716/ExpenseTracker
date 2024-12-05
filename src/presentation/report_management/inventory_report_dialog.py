@@ -6,7 +6,7 @@ class InventoryReportDialog(tk.Toplevel):
     def __init__(self, parent, report_data: Dict):
         super().__init__(parent)
         self.title("Inventory Report")
-        self.geometry("500x600")
+        self.geometry("500x700")
         self.resizable(False, False)
 
         style = ttk.Style()
