@@ -5,11 +5,13 @@ from src.business.exception.security_exception import SecurityException
 from src.business.utils.validation import Validation
 from src.data_access.inventory_repository import InventoryRepository
 from src.data_access.models.inventory_item import InventoryItem
+from src.data_access.sale_repository import SaleRepository
 
 
 class InventoryManager:
     def __init__(self):
         self.inventory_repository = InventoryRepository()
+        self.sale_repository = SaleRepository()
         self.validator = Validation()
 
     def create_item(self, name: str, description: str,
@@ -96,6 +98,7 @@ class InventoryManager:
         try:
             item_id = int(item_id)
             self.inventory_repository.delete_item(item_id)
+            self.sale_repository.delete_sale_item(item_id)
             return True, ""
 
         except Exception as e:

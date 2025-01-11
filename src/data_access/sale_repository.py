@@ -34,3 +34,11 @@ class SaleRepository(DataAccess):
 
     def get_all_sales(self) -> list[Sale]:
         return self.session.query(Sale).all()
+
+    def delete_sale_item(self, item_id: int):
+        try:
+            self.session.query(SaleItem).filter_by(inventory_item_id=item_id).delete(synchronize_session=False)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
