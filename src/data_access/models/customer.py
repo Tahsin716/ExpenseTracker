@@ -9,7 +9,7 @@ class Customer(Base):
     __tablename__ = 'customers'
 
     customer_id = Column(Integer, primary_key=True)
-    phone_number = Column(String(20), unique=True, nullable=False)
+    phone_number = Column(String(20), unique=True, nullable=False, index=True)
 
 
     sales = relationship("Sale", back_populates="customer")
