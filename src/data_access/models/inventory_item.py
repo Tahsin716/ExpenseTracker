@@ -10,7 +10,7 @@ class InventoryItem(Base):
     __tablename__ = 'inventory_items'
 
     item_id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False, index=True)
     description = Column(String)
     quantity = Column(Integer, nullable=False)
     cost_price = Column(Float, nullable=False)
