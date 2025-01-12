@@ -53,19 +53,22 @@ class SalesTab(ttk.Frame):
         ttk.Button(
             button_frame,
             text="Add Item",
-            command=self.show_add_item_dialog
+            command=self.show_add_item_dialog,
+            style="Create.TButton"
         ).pack(side='left', padx=5)
 
         ttk.Button(
             button_frame,
             text="Remove Selected",
-            command=self.remove_selected_item
+            command=self.remove_selected_item,
+            style="Delete.TButton"
         ).pack(side='left', padx=5)
 
         ttk.Button(
             button_frame,
             text="Complete Sale",
-            command=self.complete_sale
+            command=self.complete_sale,
+            style="Update.TButton"
         ).pack(side='left', padx=5)
 
         total_frame = ttk.Frame(self)

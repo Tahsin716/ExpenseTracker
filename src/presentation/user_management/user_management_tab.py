@@ -11,9 +11,9 @@ class UserManagementTab(ttk.Frame):
         self.user_manager = UserManager()
 
         self.action_frame = ttk.Frame(self)
-        self.create_button = ttk.Button(self.action_frame, text="Create User", command=self.create_user)
-        self.update_button = ttk.Button(self.action_frame, text="Update User", command=self.update_user)
-        self.delete_button = ttk.Button(self.action_frame, text="Delete User", command=self.delete_user)
+        self.create_button = ttk.Button(self.action_frame, text="Create User", command=self.create_user, style="Create.TButton")
+        self.update_button = ttk.Button(self.action_frame, text="Update User", command=self.update_user, style="Update.TButton")
+        self.delete_button = ttk.Button(self.action_frame, text="Delete User", command=self.delete_user, style="Delete.TButton")
         self.create_button.pack(side='left', padx=5)
         self.update_button.pack(side='left', padx=5)
         self.delete_button.pack(side='left', padx=5)

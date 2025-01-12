@@ -19,10 +19,10 @@ class ExpensesTab(ttk.Frame):
         self.tree.heading('Description', text='Description')
         self.tree.heading('Date', text='Date')
 
-        self.create_button = ttk.Button(self.action_frame, text="Create Expense", command=self.create_expense)
+        self.create_button = ttk.Button(self.action_frame, text="Create Expense", command=self.create_expense, style="Create.TButton")
         self.create_button.pack(side='left', padx=5)
 
-        self.create_category = ttk.Button(self.action_frame, text="Create Category", command=self.create_category)
+        self.create_category = ttk.Button(self.action_frame, text="Create Category", command=self.create_category, style="Create.TButton")
         self.create_category.pack(side='left', padx=5)
 
         self.action_frame.pack(fill='x', pady=5)

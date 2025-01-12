@@ -11,9 +11,9 @@ class InventoryManagementTab(ttk.Frame):
         self.inventory_manager = InventoryManager()
 
         self.action_frame = ttk.Frame(self)
-        self.create_button = ttk.Button(self.action_frame, text="Create Inventory", command=self.create_inventory_item)
-        self.update_button = ttk.Button(self.action_frame, text="Update Inventory", command=self.update_inventory_item)
-        self.delete_button = ttk.Button(self.action_frame, text="Delete Inventory", command=self.delete_inventory_item)
+        self.create_button = ttk.Button(self.action_frame, text="Create Inventory", command=self.create_inventory_item, style="Create.TButton")
+        self.update_button = ttk.Button(self.action_frame, text="Update Inventory", command=self.update_inventory_item, style="Update.TButton")
+        self.delete_button = ttk.Button(self.action_frame, text="Delete Inventory", command=self.delete_inventory_item, style="Delete.TButton")
         self.create_button.pack(side='left', padx=5)
         self.update_button.pack(side='left', padx=5)
         self.delete_button.pack(side='left', padx=5)

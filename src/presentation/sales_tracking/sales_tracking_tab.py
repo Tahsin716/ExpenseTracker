@@ -13,7 +13,7 @@ class SalesTrackingTab(ttk.Frame):
 
         self.action_frame = ttk.Frame(self)
         self.view_sale_items_button = ttk.Button(self.action_frame, text="View Sale Items",
-                                                command=self.view_sale_items)
+                                                command=self.view_sale_items, style="Update.TButton")
 
         self.tree = ttk.Treeview(
             self,

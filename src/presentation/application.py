@@ -23,6 +23,7 @@ class Application:
             self.frames[F.__name__] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
+        self.setup_button_styles()
         self.show_frame("Login")
         root.mainloop()
 
@@ -49,6 +50,34 @@ class Application:
 
 
         frame.tkraise()
+
+    def setup_button_styles(self):
+        style = ttk.Style()
+
+        style.configure(
+            'Create.TButton',
+            foreground='#119e24'
+        )
+
+        style.configure(
+            'Update.TButton',
+            foreground='#052df5'
+        )
+
+        style.configure(
+            'Complete.TButton',
+            foreground='#673AB7'
+        )
+
+        style.configure(
+            'Cancel.TButton',
+            foreground='#f59d05'
+        )
+
+        style.configure(
+            'Delete.TButton',
+            foreground='#f44336'
+        )
 
 
 
