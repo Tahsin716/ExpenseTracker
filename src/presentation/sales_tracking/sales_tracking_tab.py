@@ -9,7 +9,7 @@ class SalesTrackingTab(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
         self.sale_manager = SaleManager()
-        self.access_message = ttk.Label(self, text="Access Denied! Admin only Access")
+        self.access_message = ttk.Label(self, text="Access Denied! Admin only Access", foreground="red")
 
         self.action_frame = ttk.Frame(self)
         self.view_sale_items_button = ttk.Button(self.action_frame, text="View Sale Items",
@@ -20,6 +20,10 @@ class SalesTrackingTab(ttk.Frame):
             columns=('ID', 'Date', 'Customer Phone Number', 'Total'),
             show="headings",
         )
+
+        self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
+
         self.sales_dict = {}
 
         self.display()
@@ -29,6 +33,7 @@ class SalesTrackingTab(ttk.Frame):
             self.access_message.pack()
             self.tree.pack_forget()
             self.view_sale_items_button.pack_forget()
+            self.scrollbar.pack_forget()
             self.action_frame.pack_forget()
             return
         else:
@@ -47,6 +52,9 @@ class SalesTrackingTab(ttk.Frame):
         self.view_sale_items_button.pack(side='left', padx=5)
         self.action_frame.pack(fill='x', pady=5)
         self.tree.pack(expand=True, fill='both', padx=5, pady=5)
+
+        self.tree.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
 
         self.refresh_data()
 

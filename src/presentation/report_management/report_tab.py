@@ -12,7 +12,7 @@ class ReportingTab(ttk.Frame):
         ttk.Frame.__init__(self, parent)
         self.revenue_manager = RevenueManager()
 
-        self.access_message = ttk.Label(self, text="Access Denied! Admin only Access")
+        self.access_message = ttk.Label(self, text="Access Denied! Admin only Access", foreground="red")
         self.action_frame = ttk.Frame(self)
         self.expense_report_button = ttk.Button(self.action_frame, text="Generate Expense Report", command=self.generate_expense_report)
         self.inventory_report_button = ttk.Button(self.action_frame, text="Generate Inventory Report", command=self.generate_inventory_report)
