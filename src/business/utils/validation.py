@@ -13,6 +13,11 @@ class Validation:
         email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         return bool(email_pattern.match(email))
 
+    @staticmethod
+    def validate_phone_number(phone_number: str) -> bool:
+        phone_regex = r"^\+?[0-9\s\-()]+$"
+        return bool(re.match(phone_regex, phone_number))
+
     """
     Validate password strength
     - At least 8 characters

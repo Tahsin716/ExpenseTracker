@@ -2,6 +2,7 @@ import logging
 from typing import Tuple
 
 from src.business.exception.security_exception import SecurityException
+from src.business.utils.validation import Validation
 from src.data_access.customer_repository import CustomerRepository
 from src.data_access.models.customer import Customer
 
@@ -17,6 +18,9 @@ class CustomerManager():
 
             if customer:
                 raise SecurityException("Customer already exists with given phone number")
+
+            if not Validation.validate_phone_number(phone_number):
+                raise SecurityException("Invalid Phone Number format")
 
             customer = self.customer_repository.create_customer(phone_number)
             return True, "", customer
